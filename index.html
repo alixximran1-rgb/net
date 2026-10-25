@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entry Test Reference Manual — NUST NET / GIKI / ECAT</title>
+
+    <!-- Google Fonts: Inter, JetBrains Mono & Noto Nastaliq Urdu -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Nastaliq+Urdu:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome 6 (Strictly functional UI icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- KaTeX CSS & JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Inter"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                        urdu: ['"Noto Nastaliq Urdu"', 'serif']
+                    },
+                    colors: {
+                        paper: {
+                            50: '#faf9f5',
+                            100: '#f4f2ec',
+                            200: '#e5e4dc',
+                            300: '#d4d2c8',
+                            800: '#262523',
+                            900: '#141413'
+                        }
+                    },
+                    boxShadow: {
+                        'manual': '0 1px 3px rgba(20, 20, 19, 0.04), 0 1px 2px rgba(20, 20, 19, 0.02)',
+                        'manual-hover': '0 4px 12px rgba(20, 20, 19, 0.07), 0 1px 3px rgba(20, 20, 19, 0.04)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #faf9f5;
+            color: #141413;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        /* Subtle technical dot grid on warm paper */
+        .bg-dot-grid {
+            background-image: radial-gradient(#d4d2c8 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        /* Scrollbars */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .formula-scroll::-webkit-scrollbar {
+            height: 4px;
+        }
+        .formula-scroll::-webkit-scrollbar-track {
+            background: #f4f2ec;
+        }
+        .formula-scroll::-webkit-scrollbar-thumb {
+            background: #d4d2c8;
+            border-radius: 2px;
+        }
+        /* KaTeX Overrides */
+        .katex-display {
+            margin: 0.4em 0 !important;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 0.2rem 0;
+        }
+        .katex {
+            font-size: 1.02em !important;
+            color: #141413;
+        }
+        /* Recall Blur Mode */
+        .flash-blur-target {
+            transition: filter 0.2s ease, opacity 0.2s ease;
+        }
+        body.flash-mode-active .flash-blur-target:not(.revealed) {
+            filter: blur(7px);
+            user-select: none;
+            cursor: pointer;
+        }
+        body.flash-mode-active .flash-card-wrapper:not(.revealed-card) .flash-overlay-hint {
+            display: flex !important;
+        }
+        /* Urdu Typography */
+        .urdu-text {
+            font-family: 'Noto Nastaliq Urdu', serif;
+            line-height: 2.15;
+            direction: rtl;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col bg-dot-grid selection:bg-stone-900 selection:text-stone-50">
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="bg-[#141413] text-[#faf9f5] border-b border-stone-800 pt-6 pb-8 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <!-- Top Row: Title & Recall Mode Toggle -->
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-6 border-b border-stone-800">
+                <div>
+                    <div class="flex flex-wrap items-center gap-2 mb-2">
+                        <span class="font-mono text-[11px] uppercase tracking-widest px-2 py-0.5 bg-stone-800 text-stone-300 rounded border border-stone-700">
+                            FSc Part I &amp; II
+                        </span>
+                        <span class="font-mono text-[11px] uppercase tracking-widest px-2 py-0.5 bg-emerald-950/80 text-emerald-300 rounded border border-emerald-800/60">
+                            NUST NET / GIKI / ECAT
+                        </span>
+                    </div>
+                    <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-stone-50">
+                        Entry Test Reference Manual
+                    </h1>
+                    <p class="text-xs sm:text-sm text-stone-400 mt-1">
+                        Formulas, algebraic shortcuts, boundary conditions, and vocabulary notes for engineering admissions.
+                    </p>
+                </div>
+
+                <!-- Right Controls -->
+                <div class="flex flex-wrap items-center gap-2.5">
+                    <button id="flashModeBtn" onclick="toggleFlashMode()" 
+                        class="flex items-center gap-2.5 px-3.5 py-2 rounded-lg bg-stone-900 hover:bg-stone-800 border border-stone-700 text-xs font-mono uppercase tracking-wider text-stone-200 transition">
+                        <span id="flashStatusDot" class="w-2 h-2 rounded-full bg-stone-500"></span>
+                        <span id="flashModeText">Recall Blur: Off</span>
+                    </button>
+
+                    <div class="px-3.5 py-2 rounded-lg bg-stone-900 border border-stone-800 text-xs font-mono text-stone-400 flex items-center gap-2">
+                        <span>Showing <strong id="visibleCountBadge" class="text-stone-100 font-semibold">0</strong> entries</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Bar & Card Structure Key -->
+            <div class="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
+                <!-- Search Input -->
+                <div class="lg:col-span-8 relative">
+                    <div class="relative flex items-center">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 text-stone-400 text-sm pointer-events-none"></i>
+                        <input 
+                            id="globalSearchInput" 
+                            type="text" 
+                            placeholder="Search formulas, topics, shortcuts, or words (e.g. 'Parabola', 'Carnot', 'Kirchhoff', 'Cogent')..."
+                            class="w-full pl-10 pr-24 py-3 rounded-lg bg-[#faf9f5] text-[#141413] placeholder-stone-500 text-sm font-medium border border-stone-300 focus:outline-none focus:border-emerald-700 transition"
+                            oninput="handleSearch(this.value)"
+                        >
+                        <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-14 text-stone-500 hover:text-stone-900 px-2 py-1 text-[11px] font-mono uppercase font-semibold">
+                            Clear
+                        </button>
+                        <span class="hidden sm:inline-flex items-center px-2 py-0.5 text-[11px] font-mono text-stone-500 bg-stone-200/80 rounded border border-stone-300 absolute right-3 pointer-events-none">
+                            Ctrl+K
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Card Structure Key -->
+                <div class="lg:col-span-4 flex items-center justify-between lg:justify-end gap-3 text-[11px] font-mono uppercase tracking-wider text-stone-400 bg-stone-900/90 border border-stone-800 rounded-lg px-4 py-3">
+                    <span class="flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-stone-400"></span> Formula
+                    </span>
+                    <span class="text-stone-700">/</span>
+                    <span class="flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-amber-600"></span> Shortcut
+                    </span>
+                    <span class="text-stone-700">/</span>
+                    <span class="flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-600"></span> Note &amp; Trap
+                    </span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ==================== STICKY NAVIGATION & CHAPTER FILTERS ==================== -->
+    <section class="sticky top-0 z-40 bg-[#faf9f5]/95 backdrop-blur-md border-b border-[#e5e4dc] px-4 sm:px-6 lg:px-8 py-3">
+        <div class="max-w-7xl mx-auto">
+            
+            <!-- Module Switcher & Sub-Filters -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#e5e4dc]">
+                <div class="grid grid-cols-3 gap-2 w-full sm:w-auto" role="tablist">
+                    <button onclick="switchModule('math')" id="tab-math"
+                        class="module-tab bg-[#141413] text-[#faf9f5] flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-semibold text-xs sm:text-sm transition">
+                        <span>Mathematics</span>
+                        <span id="count-math" class="hidden md:inline-block font-mono px-1.5 py-0.2 text-[11px] rounded bg-stone-800 text-stone-300">0</span>
+                    </button>
+
+                    <button onclick="switchModule('physics')" id="tab-physics"
+                        class="module-tab bg-[#f4f2ec] hover:bg-[#e5e4dc] text-stone-700 border border-[#e5e4dc] flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-semibold text-xs sm:text-sm transition">
+                        <span>Physics</span>
+                        <span id="count-physics" class="hidden md:inline-block font-mono px-1.5 py-0.2 text-[11px] rounded bg-stone-200 text-stone-700">0</span>
+                    </button>
+
+                    <button onclick="switchModule('english')" id="tab-english"
+                        class="module-tab bg-[#f4f2ec] hover:bg-[#e5e4dc] text-stone-700 border border-[#e5e4dc] flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-semibold text-xs sm:text-sm transition">
+                        <span>Vocabulary</span>
+                        <span id="count-english" class="hidden md:inline-block font-mono px-1.5 py-0.2 text-[11px] rounded bg-stone-200 text-stone-700">0</span>
+                    </button>
+                </div>
+
+                <!-- Exam Tag Filter (Math & Physics) -->
+                <div id="mathPhysicsLegend" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar text-xs">
+                    <span class="text-stone-500 font-mono text-[11px] uppercase tracking-wider mr-1 whitespace-nowrap">Exam Focus:</span>
+                    <button onclick="setExamTagFilter('ALL')" id="tag-ALL" class="exam-tag-btn px-2.5 py-1 rounded bg-[#141413] text-[#faf9f5] font-mono text-[11px] font-medium whitespace-nowrap transition">All</button>
+                    <button onclick="setExamTagFilter('NET')" id="tag-NET" class="exam-tag-btn px-2.5 py-1 rounded bg-[#f4f2ec] text-stone-700 hover:bg-[#e5e4dc] border border-[#e5e4dc] font-mono text-[11px] font-medium whitespace-nowrap transition">NET</button>
+                    <button onclick="setExamTagFilter('GIKI')" id="tag-GIKI" class="exam-tag-btn px-2.5 py-1 rounded bg-[#f4f2ec] text-stone-700 hover:bg-[#e5e4dc] border border-[#e5e4dc] font-mono text-[11px] font-medium whitespace-nowrap transition">GIKI</button>
+                    <button onclick="setExamTagFilter('ECAT')" id="tag-ECAT" class="exam-tag-btn px-2.5 py-1 rounded bg-[#f4f2ec] text-stone-700 hover:bg-[#e5e4dc] border border-[#e5e4dc] font-mono text-[11px] font-medium whitespace-nowrap transition">ECAT</button>
+                </div>
+
+                <!-- Vocabulary Display Switcher -->
+                <div id="englishViewToggle" class="hidden items-center gap-2 self-end sm:self-auto">
+                    <span class="text-[11px] font-mono uppercase tracking-wider text-stone-500">Layout:</span>
+                    <div class="inline-flex rounded-lg bg-[#f4f2ec] border border-[#e5e4dc] p-0.5">
+                        <button id="vocabGridBtn" onclick="setVocabView('grid')" class="px-2.5 py-1 rounded-md text-xs font-mono font-medium bg-[#141413] text-[#faf9f5] transition">
+                            Cards
+                        </button>
+                        <button id="vocabTableBtn" onclick="setVocabView('table')" class="px-2.5 py-1 rounded-md text-xs font-mono font-medium text-stone-600 hover:text-stone-900 transition">
+                            Table
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Horizontal Chapter Pills -->
+            <div class="pt-2.5 flex items-center gap-1.5 overflow-x-auto no-scrollbar" id="chapterPillsContainer">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== RECALL MODE BANNER ==================== -->
+    <div id="flashBanner" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+        <div class="bg-amber-50/90 border border-amber-300/80 rounded-lg px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 text-amber-950 text-xs">
+            <div class="flex items-center gap-2">
+                <span class="font-mono uppercase font-semibold px-1.5 py-0.5 bg-amber-200/70 rounded text-[10px]">Recall Mode</span>
+                <span>Formulas, shortcuts, and meanings are blurred for self-testing. Click any card to toggle visibility.</span>
+            </div>
+            <button onclick="revealAllCards()" class="px-2.5 py-1 rounded bg-amber-900 text-amber-50 font-mono text-[11px] hover:bg-amber-800 transition">
+                Reveal All
+            </button>
+        </div>
+    </div>
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        
+        <!-- Section Header -->
+        <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 mb-5 pb-3 border-b border-[#e5e4dc]">
+            <div>
+                <h2 id="activeModuleHeading" class="text-lg sm:text-xl font-bold text-[#141413] tracking-tight">
+                    Part I &amp; II Mathematics Reference
+                </h2>
+                <p id="activeModuleSubheading" class="text-xs text-stone-600 mt-0.5">
+                    Standard results, direct formulas, and common question traps.
+                </p>
+            </div>
+            <div class="text-[11px] font-mono text-stone-500">
+                Click the copy icon on any card to copy the formula and notes
+            </div>
+        </div>
+
+        <!-- Cards Grid -->
+        <div id="vaultCardsGrid" class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            <!-- Populated by JS -->
+        </div>
+
+        <!-- Vocabulary Table View -->
+        <div id="vocabTableContainer" class="hidden bg-white rounded-lg shadow-manual border border-[#e5e4dc] overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-[#141413] text-[#faf9f5] font-mono text-[11px] uppercase tracking-wider">
+                            <th class="py-3 px-4 font-semibold">Word</th>
+                            <th class="py-3 px-4 font-semibold text-right">Urdu Meaning</th>
+                            <th class="py-3 px-4 font-semibold">Synonyms &amp; Antonyms</th>
+                            <th class="py-3 px-4 font-semibold">Mnemonic &amp; Context</th>
+                        </tr>
+                    </thead>
+                    <tbody id="vocabTableBody" class="divide-y divide-[#e5e4dc] text-sm">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Empty Search State -->
+        <div id="emptyStateBox" class="hidden bg-white rounded-lg shadow-manual border border-[#e5e4dc] p-10 text-center my-6">
+            <h3 class="text-base font-bold text-[#141413]">No matching entries found</h3>
+            <p class="text-xs text-stone-500 max-w-md mx-auto mt-1">
+                Try searching for another keyword (e.g., <span class="font-mono text-stone-800">"Ellipse"</span>, <span class="font-mono text-stone-800">"Doppler"</span>, <span class="font-mono text-stone-800">"Matrix"</span>) or clear your active topic filter.
+            </p>
+            <button onclick="resetAllFilters()" class="mt-4 px-4 py-2 rounded bg-[#141413] text-[#faf9f5] font-mono text-xs uppercase tracking-wider">
+                Reset Filters
+            </button>
+        </div>
+    </main>
+
+    <!-- ==================== COPY NOTIFICATION ==================== -->
+    <div id="copyToast" class="fixed bottom-5 right-5 z-50 hidden items-center gap-2 bg-[#141413] text-[#faf9f5] px-4 py-2.5 rounded-lg shadow-manual-hover border border-stone-700 text-xs font-mono">
+        <i class="fa-solid fa-check text-emerald-400"></i>
+        <span id="copyToastMsg">Copied to clipboard</span>
+    </div>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="bg-[#f4f2ec] border-t border-[#e5e4dc] mt-12 py-6 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-stone-600">
+            <div class="flex flex-wrap items-center gap-2">
+                <span class="font-semibold text-[#141413]">Entry Test Reference Manual</span>
+                <span class="text-stone-400">|</span>
+                <span>FSc Part I &amp; II Mathematics, Physics &amp; English Vocabulary</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="font-mono text-stone-700">Designed &amp; built by <strong>Ali Imran</strong></span>
+                <button onclick="window.scrollTo({top:0, behavior:'smooth'})" class="font-mono text-[11px] uppercase tracking-wider text-stone-700 hover:text-stone-950 border border-stone-300 bg-white px-2.5 py-1 rounded">
+                    Top
+                </button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==================== DATASET & APPLICATION SCRIPT ==================== -->
+    <script>
+        // ============================================================================
+        // 1. MATHEMATICS DATASET (32 CARDS)
+        // ============================================================================
+        const MATH_DATA = [
+            // --- FUNCTIONS & LIMITS ---
+            {
+                id: "m-func-1",
+                chapter: "Functions & Limits",
+                badge: "NET",
+                title: "Inverse, Domain & Range of Linear Rational Function",
+                formula: String.raw`$$f(x) = \frac{ax + b}{cx + d} \implies f^{-1}(x) = \frac{dx - b}{-cx + a}$$
+                $$\text{Domain } f = \mathbb{R} \setminus \left\{-\frac{d}{c}\right\}, \quad \text{Range } f = \mathbb{R} \setminus \left\{\frac{a}{c}\right\}$$`,
+                shortcut: "Swap $a$ and $d$, and negate $b$ and $c$. Do not solve $y = \\frac{ax+b}{cx+d}$ manually. If $a + d = 0$ (e.g., $f(x) = \\frac{2x+3}{5x-2}$), the function is self-inverse: $f^{-1}(x) = f(x)$ and $f(f(x)) = x$.",
+                memorize: "<strong>Pattern:</strong> Treat the coefficients $\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$ exactly like the adjoint of a $2\\times 2$ matrix. <br><strong>Watch Out:</strong> Range excludes $\\frac{\\text{coeff of } x \\text{ in numerator}}{\\text{coeff of } x \\text{ in denominator}} = \\frac{a}{c}$. Reorder terms first if the numerator is written as $b + ax$."
+            },
+            {
+                id: "m-func-2",
+                chapter: "Functions & Limits",
+                badge: "NET",
+                title: "Euler's Exponential Limit & $1^\\infty$ Indeterminate Form",
+                formula: String.raw`$$\lim_{x \to 0} (1 + kx)^{\frac{m}{x}} = e^{km}, \qquad \lim_{x \to \infty} \left(1 + \frac{k}{x}\right)^{mx} = e^{km}$$
+                $$\text{If } \lim_{x \to a} [f(x)]^{g(x)} \to 1^\infty \implies L = \exp\left(\lim_{x \to a} g(x)\cdot [f(x) - 1]\right)$$`,
+                shortcut: "Whenever direct substitution gives $1^\\infty$, write $e^{\\lim (\\text{Base} - 1) \\times \\text{Exponent}}$. For example: $\\lim_{x\\to 0}(\\cos x)^{1/x^2} = e^{\\lim (\\cos x - 1)/x^2} = e^{-1/2}$.",
+                memorize: "<strong>Watch Out:</strong> Before applying $e^{\\lim g(x)[f(x)-1]}$, confirm that $\\lim f(x) = 1$ and $\\lim g(x) = \\infty$. If the base approaches $0$ or a constant $\\ne 1$, just substitute directly."
+            },
+            {
+                id: "m-func-3",
+                chapter: "Functions & Limits",
+                badge: "GIKI",
+                title: "Trigonometric, Exponential & Small-Angle Limits",
+                formula: String.raw`$$\lim_{x \to 0} \frac{\sin(ax)}{\sin(bx)} = \frac{a}{b}, \quad \lim_{x \to 0} \frac{1 - \cos(ax)}{x^2} = \frac{a^2}{2}, \quad \lim_{x \to 0} \frac{a^x - b^x}{x} = \ln\left(\frac{a}{b}\right)$$`,
+                shortcut: "As $x \\to 0$, use first-order replacements directly: $\\sin(kx) \\approx kx$, $\\tan(kx) \\approx kx$, $1 - \\cos(kx) \\approx \\frac{1}{2}k^2x^2$, $\\ln(1+kx) \\approx kx$, and $e^{kx} - 1 \\approx kx$.",
+                memorize: "<strong>Watch Out:</strong> Radian vs. Degree trap: $\\lim_{x\\to 0} \\frac{\\sin x^\\circ}{x} = \\frac{\\pi}{180}$ because $x^\\circ = \\frac{\\pi x}{180}$ radians."
+            },
+            {
+                id: "m-func-4",
+                chapter: "Functions & Limits",
+                badge: "ECAT",
+                title: "Even/Odd Symmetry, Functional Equations & Hyperbolic Identities",
+                formula: String.raw`$$\cosh x = \frac{e^x + e^{-x}}{2}, \quad \sinh x = \frac{e^x - e^{-x}}{2}, \quad \cosh^2 x - \sinh^2 x = 1$$
+                $$\sinh^{-1} x = \ln\left(x + \sqrt{x^2 + 1}\right), \qquad \cosh^{-1} x = \ln\left(x + \sqrt{x^2 - 1}\right)$$`,
+                shortcut: "Standard functional equations: <br>• $f(x+y) = f(x)f(y) \\implies f(x) = a^x$ <br>• $f(xy) = f(x) + f(y) \\implies f(x) = k\\ln x$ <br>• $f(x+y) = f(x) + f(y) \\implies f(x) = kx$.",
+                memorize: "<strong>Watch Out:</strong> In circular trig, $\\cos^2 x + \\sin^2 x = 1$, but in hyperbolic trig, the difference is unity: $\\cosh^2 x - \\sinh^2 x = 1$. Also, $\\cosh x \\ge 1$ for all real $x$."
+            },
+
+            // --- QUADRATICS & EQUATIONS ---
+            {
+                id: "m-quad-1",
+                chapter: "Quadratics & Equations",
+                badge: "NET",
+                title: "Roots Relations, Difference of Roots & Symmetric Functions",
+                formula: String.raw`$$ax^2 + bx + c = 0 \implies \alpha + \beta = -\frac{b}{a}, \quad \alpha\beta = \frac{c}{a}, \quad |\alpha - \beta| = \frac{\sqrt{b^2 - 4ac}}{|a|}$$
+                $$\alpha^2 + \beta^2 = (\alpha+\beta)^2 - 2\alpha\beta, \qquad \alpha^3 + \beta^3 = (\alpha+\beta)^3 - 3\alpha\beta(\alpha+\beta)$$`,
+                shortcut: "Quick coefficient checks for $ax^2+bx+c=0$: <br>• Reciprocal roots ($\\beta = 1/\\alpha$) $\\iff a = c$. <br>• Equal in magnitude, opposite in sign $\\iff b = 0$. <br>• If $a+b+c = 0$, the roots are immediately $1$ and $c/a$.",
+                memorize: "<strong>Example:</strong> In $2025x^2 - 2026x + 1 = 0$, since $a+b+c = 0$, the roots are $1$ and $1/2025$. <br><strong>Watch Out:</strong> If one root is double the other ($\\beta = 2\\alpha$), the condition is $2b^2 = 9ac$."
+            },
+            {
+                id: "m-quad-2",
+                chapter: "Quadratics & Equations",
+                badge: "ECAT",
+                title: "Cube Roots of Unity ($1, \\omega, \\omega^2$) & Cyclic Identities",
+                formula: String.raw`$$\omega = \frac{-1 + \sqrt{3}i}{2}, \quad \omega^2 = \frac{-1 - \sqrt{3}i}{2}, \quad 1 + \omega + \omega^2 = 0, \quad \omega^3 = 1$$
+                $$\omega^n + \omega^{2n} = \begin{cases} 2 & \text{if } 3 \mid n \\ -1 & \text{if } 3 \nmid n \end{cases}, \qquad x^3 + y^3 = (x+y)(x+\omega y)(x+\omega^2 y)$$`,
+                shortcut: "To reduce $\\omega^N$, divide $N$ by $3$ and keep only the remainder $r \\in \\{0,1,2\\}$. Also keep ready: $(1 - \\omega + \\omega^2)^n = (-2\\omega)^n$ and $(1 + \\omega - \\omega^2)^n = (-2\\omega^2)^n$.",
+                memorize: "<strong>Watch Out:</strong> Check the real part sign carefully: $\\frac{-1+\\sqrt{3}i}{2} = \\omega$, whereas $\\frac{+1+\\sqrt{3}i}{2} = -\\omega^2$. The product of all fourth roots of unity $(1, -1, i, -i)$ is $-1$, whereas their sum is $0$."
+            },
+
+            // --- MATRICES & DETERMINANTS ---
+            {
+                id: "m-mat-1",
+                chapter: "Matrices & Determinants",
+                badge: "NET",
+                title: "Determinant, Adjoint & Inverse Scaling Rules (Order $n$)",
+                formula: String.raw`$$\text{For } A_{n \times n}: \quad |kA| = k^n|A|, \quad |A^m| = |A|^m, \quad |A^{-1}| = \frac{1}{|A|}$$
+                $$|\text{adj}(A)| = |A|^{n-1}, \quad \text{adj}(\text{adj } A) = |A|^{n-2}A, \quad |\text{adj}(\text{adj } A)| = |A|^{(n-1)^2}$$`,
+                shortcut: "If $A$ is a $3\\times 3$ matrix ($n=3$) with $|A| = 5$, then $|2A| = 2^3(5) = 40$, $|\\text{adj } A| = 5^{3-1} = 25$, and $|\\text{adj}(\\text{adj } A)| = 5^{(2)^2} = 625$.",
+                memorize: "<strong>Pattern:</strong> Each nested adjoint raises the determinant to the power $(n-1)$. <br><strong>Watch Out:</strong> $|kA| = k^n|A|$ multiplies by $k^n$, not $k$, because scalar multiplication scales all $n$ rows of the matrix."
+            },
+            {
+                id: "m-mat-2",
+                chapter: "Matrices & Determinants",
+                badge: "GIKI",
+                title: "Symmetric, Skew-Symmetric, Orthogonal & Hermitian Matrices",
+                formula: String.raw`$$\text{Symmetric: } A^t = A \quad \Big| \quad \text{Skew-Symmetric: } A^t = -A \implies a_{ii} = 0$$
+                $$\text{If } A \text{ is Skew-Symmetric of ODD order } n \implies |A| = 0 \text{ (Singular)}$$
+                $$\text{Orthogonal: } AA^t = I \implies A^{-1} = A^t \text{ and } |A| = \pm 1$$`,
+                shortcut: "If you see a $3\\times 3$ determinant with $0$ on the main diagonal and $a_{ij} = -a_{ji}$ across the diagonal, do not expand it—the determinant is always $0$.",
+                memorize: "<strong>Derivation:</strong> $|A| = |A^t| = |-A| = (-1)^n|A|$. When $n$ is odd, $|A| = -|A| \\implies |A| = 0$. <br><strong>Watch Out:</strong> For a Hermitian matrix ($A^\\theta = A$), all diagonal entries must be purely real numbers."
+            },
+            {
+                id: "m-mat-3",
+                chapter: "Matrices & Determinants",
+                badge: "NET",
+                title: "Eigenvalues, Trace, Nilpotent & Idempotent Matrices",
+                formula: String.raw`$$\sum_{i=1}^n \lambda_i = \text{Tr}(A) = \sum_{i=1}^n a_{ii}, \qquad \prod_{i=1}^n \lambda_i = |A|$$
+                $$\text{Idempotent: } A^2 = A, \qquad \text{Involutory: } A^2 = I \implies A^{-1} = A, \qquad \text{Nilpotent: } A^k = O$$`,
+                shortcut: "For a triangular or diagonal matrix, the determinant is simply the product of the main diagonal entries: $|A| = a_{11}a_{22}\\cdots a_{nn}$.",
+                memorize: "<strong>Watch Out:</strong> If $A^2 = I$ (Involutory), the matrix is its own inverse ($A^{-1} = A$). If $A^2 = A$ (Idempotent), its eigenvalues can only be $0$ or $1$."
+            },
+
+            // --- SEQUENCES, SERIES & PARTIAL FRACTIONS ---
+            {
+                id: "m-seq-1",
+                chapter: "Sequences & Series",
+                badge: "NET",
+                title: "AP, GP, HP Means & Sum-to-Term Conversion",
+                formula: String.raw`$$A = \frac{a+b}{2}, \quad G = \sqrt{ab}, \quad H = \frac{2ab}{a+b} \implies G^2 = A \cdot H \text{ and } A \ge G \ge H$$
+                $$\frac{a^n + b^n}{a^{n-1} + b^{n-1}} = \begin{cases} A \implies n = 1 \\ G \implies n = 1/2 \\ H \implies n = 0 \end{cases}, \qquad a_n = S_n - S_{n-1}$$`,
+                shortcut: "Given $S_n = pn^2 + qn$ (quadratic in $n$ with no constant term), the sequence is an AP with common difference $d = 2p$ (twice the coefficient of $n^2$) and first term $a_1 = p + q$.",
+                memorize: "<strong>Pattern:</strong> The exponent $n$ in $\\frac{a^n+b^n}{a^{n-1}+b^{n-1}}$ for $A, G, H$ steps down by $0.5$ each time: $1, \\frac{1}{2}, 0$. <br><strong>Watch Out:</strong> If $a$ and $b$ are both negative, $G = -\\sqrt{ab}$."
+            },
+            {
+                id: "m-seq-2",
+                chapter: "Sequences & Series",
+                badge: "ECAT",
+                title: "Heaviside Cover-Up Rule & Special Power Sums",
+                formula: String.raw`$$\frac{P(x)}{(x - a)(x - b)} = \frac{A}{x - a} + \frac{B}{x - b} \implies A = \left.\frac{P(x)}{x - b}\right|_{x = a}$$
+                $$\sum_{k=1}^n k = \frac{n(n+1)}{2}, \quad \sum_{k=1}^n k^2 = \frac{n(n+1)(2n+1)}{6}, \quad \sum_{k=1}^n k^3 = \left[\frac{n(n+1)}{2}\right]^2$$`,
+                shortcut: "For telescoping fractions $\\sum_{k=1}^n \\frac{1}{k(k+1)}$, the sum is always $\\frac{n}{n+1}$ (and as $n \\to \\infty$, the sum is $1$). To find $A$ over $(x-a)$ in partial fractions, cover $(x-a)$ on the left and substitute $x=a$.",
+                memorize: "<strong>Watch Out:</strong> Partial fraction decomposition requires a proper fraction ($\\deg N < \\deg D$). If $\\deg N = \\deg D$, divide the leading coefficients first to get the constant term."
+            },
+
+            // --- PROBABILITY & BINOMIAL ---
+            {
+                id: "m-perm-1",
+                chapter: "Probability & Binomial",
+                badge: "NET",
+                title: "Binomial Term Independent of $x$ & Coefficient Sums",
+                formula: String.raw`$$\text{In } \left(ax^p + \frac{b}{x^q}\right)^n, \text{ for } x^k \text{ term: } r = \frac{np - k}{p + q} \quad \left(\text{Constant term } \implies r = \frac{np}{p + q}\right)$$
+                $$\sum_{r=0}^n \binom{n}{r} = 2^n, \qquad \sum_{\text{even}} \binom{n}{r} = \sum_{\text{odd}} \binom{n}{r} = 2^{n-1}$$`,
+                shortcut: "To find the sum of all coefficients in any polynomial expansion like $(3x - 2y + 5)^8$, substitute $x = 1, y = 1$ directly: $(3 - 2 + 5)^8 = 6^8$.",
+                memorize: "<strong>Number of terms:</strong> $(a+b)^n$ has $n+1$ terms; $(a+b+c)^n$ has $\\frac{(n+1)(n+2)}{2}$ terms. <br><strong>Watch Out:</strong> For $(1+x)^n$, the middle term is at $r = n/2$ (for even $n$) or $r = \\frac{n-1}{2}, \\frac{n+1}{2}$ (for odd $n$)."
+            },
+            {
+                id: "m-perm-2",
+                chapter: "Probability & Binomial",
+                badge: "GIKI",
+                title: "Circular Permutations, Diagonals, Handshakes & Derangements",
+                formula: String.raw`$$\text{Circular Table: } (n-1)!, \qquad \text{Necklace / Keyring (Flip-Symmetric): } \frac{(n-1)!}{2}$$
+                $$\text{Diagonals in } n\text{-gon} = \binom{n}{2} - n = \frac{n(n-3)}{2}, \qquad \text{Handshakes} = \binom{n}{2} = \frac{n(n-1)}{2}$$`,
+                shortcut: "Derangements $D_n$ (placing $n$ items into $n$ boxes such that none matches its original position): $D_1 = 0, \; D_2 = 1, \; D_3 = 2, \; D_4 = 9, \; D_5 = 44$.",
+                memorize: "<strong>Collinear Points Formula:</strong> Given $n$ points with $k$ collinear, the number of straight lines is $\\binom{n}{2} - \\binom{k}{2} + 1$, and the number of triangles is $\\binom{n}{3} - \\binom{k}{3}$."
+            },
+            {
+                id: "m-perm-3",
+                chapter: "Probability & Binomial",
+                badge: "NET",
+                title: "Probability Laws, Independent Events & Dice Sum Distribution",
+                formula: String.raw`$$P(A \cup B) = P(A) + P(B) - P(A \cap B), \qquad P(A \mid B) = \frac{P(A \cap B)}{P(B)}$$
+                $$\text{Independent: } P(A \cap B) = P(A)P(B), \qquad P(\text{At least one}) = 1 - P(\text{None})$$`,
+                shortcut: "For two dice ($36$ outcomes), the count of ways to roll a sum $S \\in [2, 12]$ forms a triangle peaking at $S = 7$: $\\text{Ways}(S) = 6 - |7 - S|$. For example, sum $7$ has $6$ ways; sum $9$ has $6 - |7-9| = 4$ ways.",
+                memorize: "<strong>Watch Out:</strong> 'Mutually Exclusive' ($P(A\\cap B) = 0$) and 'Independent' ($P(A\\cap B) = P(A)P(B)$) are different concepts. Two events with non-zero probabilities cannot be both mutually exclusive and independent."
+            },
+
+            // --- TRIGONOMETRY ---
+            {
+                id: "m-trig-1",
+                chapter: "Trigonometry",
+                badge: "NET",
+                title: "Extrema of $a\\sin\\theta + b\\cos\\theta$ & Periodicity Rules",
+                formula: String.raw`$$-\sqrt{a^2 + b^2} \le a\sin\theta + b\cos\theta \le +\sqrt{a^2 + b^2}$$
+                $$\text{Period of } \sin^n(kx), \cos^n(kx) = \begin{cases} \frac{2\pi}{|k|} & n \text{ odd} \\ \frac{\pi}{|k|} & n \text{ even} \end{cases}, \quad \text{Period of } \tan(kx), |\sin(kx)| = \frac{\pi}{|k|}$$`,
+                shortcut: "For $f(\\theta) = 3\\sin\\theta - 4\\cos\\theta + 7$, max is $\\sqrt{3^2+(-4)^2} + 7 = 12$ and min is $-5 + 7 = 2$. Also, $|\\sin x| + |\\cos x|$ has period $\\frac{\\pi}{2}$, min $1$, and max $\\sqrt{2}$.",
+                memorize: "<strong>Watch Out:</strong> In $a\\sin\\theta + b\\cos\\theta$, both terms must have the same argument $\\theta$. For a sum of functions $f(x)+g(x)$, the overall period is $\\text{LCM}(T_1, T_2)$."
+            },
+            {
+                id: "m-trig-2",
+                chapter: "Trigonometry",
+                badge: "ECAT",
+                title: "Consecutive Angle Products & Half-Angle Tangent Substitution",
+                formula: String.raw`$$\sin\theta \cdot \sin(60^\circ - \theta) \cdot \sin(60^\circ + \theta) = \frac{1}{4}\sin(3\theta)$$
+                $$\cos\theta \cdot \cos(60^\circ - \theta) \cdot \cos(60^\circ + \theta) = \frac{1}{4}\cos(3\theta)$$
+                $$\tan\theta \cdot \tan(60^\circ - \theta) \cdot \tan(60^\circ + \theta) = \tan(3\theta)$$`,
+                shortcut: "With $\\theta = 20^\\circ$: $\\sin 20^\\circ \\sin 40^\\circ \\sin 60^\\circ \\sin 80^\\circ = \\frac{3}{16}$, and $\\cos 20^\\circ \\cos 40^\\circ \\cos 60^\\circ \\cos 80^\\circ = \\frac{1}{16}$. Also, if $A + B = 45^\\circ$, then $(1 + \\tan A)(1 + \\tan B) = 2$.",
+                memorize: "<strong>Watch Out:</strong> Notice that the $\\frac{1}{4}$ factor cancels out in the tangent product formula."
+            },
+            {
+                id: "m-trig-3",
+                chapter: "Trigonometry",
+                badge: "NET",
+                title: "Solution of Triangles: Radii ($R, r, r_1$) & Sine/Cosine Laws",
+                formula: String.raw`$$\frac{a}{\sin\alpha} = \frac{b}{\sin\beta} = \frac{c}{\sin\gamma} = 2R, \qquad R = \frac{abc}{4\Delta}, \qquad r = \frac{\Delta}{s}, \qquad r_1 = \frac{\Delta}{s - a}$$
+                $$\frac{1}{r} = \frac{1}{r_1} + \frac{1}{r_2} + \frac{1}{r_3}, \qquad \Delta = \sqrt{r \cdot r_1 \cdot r_2 \cdot r_3}$$`,
+                shortcut: "In an equilateral triangle of side $a$: $r : R : r_1 = 1 : 2 : 3$ (specifically $r = \\frac{a}{2\\sqrt{3}}, R = \\frac{a}{\\sqrt{3}}, r_1 = \\frac{\\sqrt{3}a}{2}$). In a right triangle ($\\gamma = 90^\\circ$): $R = \\frac{c}{2}$ and $r = \\frac{a+b-c}{2}$.",
+                memorize: "<strong>Watch Out:</strong> Hero's formula $\\Delta = \\sqrt{s(s-a)(s-b)(s-c)}$ uses the semi-perimeter $s = \\frac{a+b+c}{2}$, not the full perimeter."
+            },
+            {
+                id: "m-trig-4",
+                chapter: "Trigonometry",
+                badge: "GIKI",
+                title: "Inverse Trigonometric Identities & Principal Domains",
+                formula: String.raw`$$\sin^{-1}x + \cos^{-1}x = \frac{\pi}{2}, \qquad \tan^{-1}x + \cot^{-1}x = \frac{\pi}{2}, \qquad \sec^{-1}x + \csc^{-1}x = \frac{\pi}{2}$$
+                $$\tan^{-1}A + \tan^{-1}B = \tan^{-1}\left(\frac{A + B}{1 - AB}\right) \quad (\text{for } AB < 1)$$`,
+                shortcut: "Useful benchmark sum: $\\tan^{-1}(1) + \\tan^{-1}(2) + \\tan^{-1}(3) = \\pi$, whereas $\\tan^{-1}\\left(\\frac{1}{2}\\right) + \\tan^{-1}\\left(\\frac{1}{3}\\right) = \\frac{\\pi}{4}$.",
+                memorize: "<strong>Principal Ranges:</strong> $\\sin^{-1}x, \\tan^{-1}x \\in [-\\frac{\\pi}{2}, \\frac{\\pi}{2}]$, whereas $\\cos^{-1}x, \\cot^{-1}x \\in [0, \\pi]$. <br><strong>Watch Out:</strong> When $A > 0, B > 0$ and $AB > 1$, add $\\pi$ to the principal value: $\\pi + \\tan^{-1}\\left(\\frac{A+B}{1-AB}\\right)$."
+            },
+
+            // --- COMPLEX NUMBERS ---
+            {
+                id: "m-comp-1",
+                chapter: "Complex Numbers",
+                badge: "NET",
+                title: "De Moivre's Theorem, Powers of $i$ & Argand Locus",
+                formula: String.raw`$$(\cos\theta + i\sin\theta)^n = \cos(n\theta) + i\sin(n\theta), \qquad i^n + i^{n+1} + i^{n+2} + i^{n+3} = 0$$
+                $$|z - z_0| = r \;\text{(Circle)}, \qquad |z - z_1| = |z - z_2| \;\text{(Perpendicular Bisector)}$$`,
+                shortcut: "Fast complex reductions: <br>1) $(1 + i)^2 = 2i$ and $(1 - i)^2 = -2i$. <br>2) $\\frac{1+i}{1-i} = i$ and $\\frac{1-i}{1+i} = -i$. <br>So $\\left(\\frac{1+i}{1-i}\\right)^{4n} = i^{4n} = 1$.",
+                memorize: "<strong>Square Root of $a + ib$:</strong> $\\pm\\left[\\sqrt{\\frac{|z|+a}{2}} + i\\,\\text{sgn}(b)\\sqrt{\\frac{|z|-a}{2}}\\right]$. <br><strong>Watch Out:</strong> Principal argument $\\text{Arg}(z) \\in (-\\pi, \\pi]$. Adjust by $\\pi - \\alpha$ in Quadrant II and $-\\pi + \\alpha$ in Quadrant III."
+            },
+
+            // --- CALCULUS: DIFFERENTIATION ---
+            {
+                id: "m-diff-1",
+                chapter: "Calculus (Derivatives)",
+                badge: "NET",
+                title: "Implicit Differentiation, Infinite Radicals & Power Towers",
+                formula: String.raw`$$\text{If } F(x,y) = 0 \implies \frac{dy}{dx} = -\frac{\partial F / \partial x}{\partial F / \partial y}$$
+                $$y = \sqrt{f(x) + \sqrt{f(x) + \dots \infty}} \implies \frac{dy}{dx} = \frac{f'(x)}{2y - 1}$$
+                $$y = f(x)^{f(x)^{f(x)^{\dots \infty}}} \implies \frac{dy}{dx} = \frac{y^2 f'(x)}{f(x)[1 - y\ln f(x)]}$$`,
+                shortcut: "For implicit equations $F(x,y) = 0$, avoid differentiating term-by-term with $dy/dx$. Just write $-\\frac{F_x}{F_y}$ where $F_x$ treats $y$ as constant and $F_y$ treats $x$ as constant.",
+                memorize: "<strong>Variable-to-Variable Power:</strong> $\\frac{d}{dx}[u^v] = v u^{v-1}u' + u^v(\\ln u)v'$ (sum of power rule and exponential rule). <br><strong>Watch Out:</strong> Do not drop the leading minus sign in $-\\frac{F_x}{F_y}$."
+            },
+            {
+                id: "m-diff-2",
+                chapter: "Calculus (Derivatives)",
+                badge: "ECAT",
+                title: "Maclaurin Series, Euler's Homogeneous Theorem & Extrema",
+                formula: String.raw`$$e^x = 1 + x + \frac{x^2}{2!} + \frac{x^3}{3!} + \dots, \qquad \sin x = x - \frac{x^3}{3!} + \frac{x^5}{5!} - \dots, \qquad \cos x = 1 - \frac{x^2}{2!} + \frac{x^4}{4!} - \dots$$
+                $$\text{Homogeneous } f(tx,ty) = t^n f(x,y) \implies x\frac{\partial f}{\partial x} + y\frac{\partial f}{\partial y} = n f(x,y)$$`,
+                shortcut: "Maximum value of $f(x) = \\frac{\\ln x}{x}$ (or $x^{1/x}$) occurs at **$x = e$**, and its maximum value is $\\frac{1}{e}$ (or $e^{1/e}$).",
+                memorize: "<strong>Watch Out:</strong> $\\ln(1+x) = x - \\frac{x^2}{2} + \\frac{x^3}{3} - \\dots$ uses plain denominators $n$, NOT factorials $n!$."
+            },
+
+            // --- CALCULUS: INTEGRATION ---
+            {
+                id: "m-int-1",
+                chapter: "Calculus (Integration)",
+                badge: "NET",
+                title: "Exponential Cancellation & Definite Integral Symmetry (King's Rule)",
+                formula: String.raw`$$\int e^x \left[f(x) + f'(x)\right] dx = e^x f(x) + c, \qquad \int \frac{f'(x)}{f(x)}dx = \ln|f(x)| + c$$
+                $$I = \int_a^b \frac{f(x)}{f(x) + f(a+b-x)} dx = \frac{b - a}{2}$$`,
+                shortcut: "Any definite integral of the form $\\int_0^{\\pi/2} \\frac{\\sin^n x}{\\sin^n x + \\cos^n x}dx$ or $\\int_a^b \\frac{\\sqrt{x}}{\\sqrt{x} + \\sqrt{a+b-x}}dx$ evaluates to $\\frac{b - a}{2}$ (which is $\\frac{\\pi}{4}$ on $[0, \\pi/2]$), for any real exponent $n$.",
+                memorize: "<strong>Even/Odd Definite Integral on $[-a, a]$:</strong> If $f(-x) = -f(x)$ (odd), $\\int_{-a}^a f(x)dx = 0$. <br><strong>Watch Out:</strong> For $\\int e^{kx}[f(x) + \\frac{f'(x)}{k}]dx$, the result is $\\frac{e^{kx}f(x)}{k} + c$."
+            },
+            {
+                id: "m-int-2",
+                chapter: "Calculus (Integration)",
+                badge: "ECAT",
+                title: "Parabola Bounded Area, Wallis Formula & Differential Equations",
+                formula: String.raw`$$\text{Area}(y^2 = 4ax \cap x^2 = 4by) = \frac{16ab}{3}, \qquad \text{Area}(y^2 = 4ax \cap y = mx) = \frac{8a^2}{3m^3}$$
+                $$\int_0^{\pi/2} \sin^n x \, dx = \int_0^{\pi/2} \cos^n x \, dx = \frac{(n-1)(n-3)\cdots}{(n)(n-2)\cdots} \times \begin{cases} \frac{\pi}{2} & n \text{ even} \\ 1 & n \text{ odd} \end{cases}$$
+                $$\frac{dy}{dx} + P(x)y = Q(x) \implies \text{Integrating Factor } \text{I.F.} = e^{\int P(x)dx}$$`,
+                shortcut: "Area enclosed by an ellipse $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1$ is $\\pi ab$. Area of one arch of $\\sin x$ or $\\cos x$ (from $0$ to $\\pi$) is $2$, so $\\int_0^{n\\pi} |\\sin x|dx = 2n$.",
+                memorize: "<strong>Watch Out:</strong> Convert the parabola to standard form $y^2 = 4ax$ before reading $a$. If given $y^2 = 8x$, then $4a = 8 \\implies a = 2$, not $8$."
+            },
+
+            // --- ANALYTICAL GEOMETRY ---
+            {
+                id: "m-geo-1",
+                chapter: "Analytical Geometry",
+                badge: "NET",
+                title: "Straight Line Distances, Foot/Mirror Image & Homogeneous Pair",
+                formula: String.raw`$$d_{\text{point}} = \frac{|ax_1 + by_1 + c|}{\sqrt{a^2 + b^2}}, \qquad d_{\text{parallel}} = \frac{|c_1 - c_2|}{\sqrt{a^2 + b^2}}$$
+                $$\frac{x - x_1}{a} = \frac{y - y_1}{b} = \frac{-k(ax_1 + by_1 + c)}{a^2 + b^2} \quad \begin{cases} k = 1 \implies \text{Foot of } \perp \\ k = 2 \implies \text{Mirror Image} \end{cases}$$
+                $$ax^2 + 2hxy + by^2 = 0 \implies \tan\theta = \frac{2\sqrt{h^2 - ab}}{|a + b|}$$`,
+                shortcut: "For $ax^2 + 2hxy + by^2 = 0$: <br>• Lines are coincident/parallel $\\iff h^2 = ab$. <br>• Lines are perpendicular $\\iff a + b = 0$. <br>• Sum of slopes $m_1 + m_2 = -\\frac{2h}{b}$ and product $m_1m_2 = \\frac{a}{b}$.",
+                memorize: "<strong>Area between Intercepts:</strong> A line $ax + by + c = 0$ forms a right triangle with the coordinate axes of area $A = \\frac{c^2}{2|ab|}$. <br><strong>Watch Out:</strong> Match the $x$ and $y$ coefficients of both parallel lines before applying $\\frac{|c_1-c_2|}{\\sqrt{a^2+b^2}}$."
+            },
+            {
+                id: "m-geo-2",
+                chapter: "Analytical Geometry",
+                badge: "ECAT",
+                title: "Triangle Centers (Centroid, Incenter, Orthocenter) & Concurrency",
+                formula: String.raw`$$G = \left(\frac{x_1+x_2+x_3}{3}, \frac{y_1+y_2+y_3}{3}\right), \qquad I = \left(\frac{ax_1+bx_2+cx_3}{a+b+c}, \frac{ay_1+by_2+cy_3}{a+b+c}\right)$$
+                $$\text{Euler Line Ratio: } HG : GO = 2 : 1$$`,
+                shortcut: "In a right-angled triangle, the **orthocenter $H$** is the vertex at the $90^\\circ$ angle, and the **circumcenter $O$** is the midpoint of the hypotenuse.",
+                memorize: "<strong>Collinearity &amp; Concurrency:</strong> Three lines $a_ix + b_iy + c_i = 0$ are concurrent if $\\det[a_i \; b_i \; c_i] = 0$. In an equilateral triangle, $G, I, O, H$ all coincide at the exact same point."
+            },
+
+            // --- CONIC SECTIONS ---
+            {
+                id: "m-conic-1",
+                chapter: "Conic Sections",
+                badge: "NET",
+                title: "Circle Equation, Tangent Length, Position of Point & Chord",
+                formula: String.raw`$$S: x^2 + y^2 + 2gx + 2fy + c = 0 \implies \text{Center } (-g, -f), \quad R = \sqrt{g^2 + f^2 - c}$$
+                $$\text{Tangent Length} = \sqrt{S_1}, \qquad y = mx + c \text{ is tangent to } x^2+y^2=a^2 \iff c = \pm a\sqrt{1+m^2}$$`,
+                shortcut: "Substitute the point $(x_1, y_1)$ into $S$: <br>• $S_1 > 0 \\implies$ Outside <br>• $S_1 = 0 \\implies$ On the circle <br>• $S_1 < 0 \\implies$ Inside. <br>Two circles are orthogonal ($90^\\circ$) if $2g_1g_2 + 2f_1f_2 = c_1 + c_2$.",
+                memorize: "<strong>Tangent Replacement ($T = 0$):</strong> Replace $x^2 \\to xx_1$, $y^2 \\to yy_1$, $2x \\to x+x_1$, $2y \\to y+y_1$. <br><strong>Watch Out:</strong> Divide by the coefficient of $x^2$ and $y^2$ first so the equation starts with $1x^2 + 1y^2$."
+            },
+            {
+                id: "m-conic-2",
+                chapter: "Conic Sections",
+                badge: "NET",
+                title: "Comparison of Parabola, Ellipse & Hyperbola Parameters",
+                formula: String.raw`$$\begin{array}{l|c|c|c}
+                \textbf{Parameter} & \textbf{Parabola } (y^2=4ax) & \textbf{Ellipse } (\frac{x^2}{a^2}+\frac{y^2}{b^2}=1) & \textbf{Hyperbola } (\frac{x^2}{a^2}-\frac{y^2}{b^2}=1) \\ \hline
+                \text{Eccentricity } e & e = 1 & e = \sqrt{1 - \frac{b^2}{a^2}} < 1 & e = \sqrt{1 + \frac{b^2}{a^2}} > 1 \\
+                \text{Foci } & (\pm a, 0) & (\pm ae, 0) & (\pm ae, 0) \\
+                \text{Directrices} & x = \pm a & x = \pm \frac{a}{e} & x = \pm \frac{a}{e} \\
+                \text{Latus Rectum} & 4a & \frac{2b^2}{a} & \frac{2b^2}{a}
+                \end{array}$$`,
+                shortcut: "For a rectangular hyperbola ($a = b$, i.e. $x^2 - y^2 = a^2$ or $xy = c^2$), eccentricity is always $e = \\sqrt{2}$. For conjugate hyperbolas with eccentricities $e_1, e_2$, $\\frac{1}{e_1^2} + \\frac{1}{e_2^2} = 1$.",
+                memorize: "<strong>Tangency Conditions for $y = mx + c$:</strong> <br>• Parabola $y^2 = 4ax$: $c = \\frac{a}{m}$ <br>• Ellipse: $c^2 = a^2m^2 + b^2$ <br>• Hyperbola: $c^2 = a^2m^2 - b^2$."
+            },
+
+            // --- VECTORS & 3D ---
+            {
+                id: "m-vec-1",
+                chapter: "Vectors & 3D",
+                badge: "ECAT",
+                title: "Projection, Lagrange's Identity, Triple Product & Direction Cosines",
+                formula: String.raw`$$\text{Proj of } \vec{a} \text{ on } \vec{b} = \frac{\vec{a}\cdot\vec{b}}{|\vec{b}|}, \qquad |\vec{a}\times\vec{b}|^2 + (\vec{a}\cdot\vec{b})^2 = |\vec{a}|^2|\vec{b}|^2$$
+                $$\cos^2\alpha + \cos^2\beta + \cos^2\gamma = 1, \qquad \sin^2\alpha + \sin^2\beta + \sin^2\gamma = 2$$
+                $$V_{\text{parallelepiped}} = |[\vec{a}\;\vec{b}\;\vec{c}]|, \qquad V_{\text{tetrahedron}} = \frac{1}{6}|[\vec{a}\;\vec{b}\;\vec{c}]|$$`,
+                shortcut: "Using Lagrange's Identity $|\\vec{a}\\times\\vec{b}|^2 + (\\vec{a}\\cdot\\vec{b})^2 = |\\vec{a}|^2|\\vec{b}|^2$, you can find $|\\vec{a}\\times\\vec{b}|$ directly from $\\vec{a}\\cdot\\vec{b}$ without finding $\\theta$. Also, $[\\vec{a}+\\vec{b}, \\vec{b}+\\vec{c}, \\vec{c}+\\vec{a}] = 2[\\vec{a}\\;\\vec{b}\\;\\vec{c}]$.",
+                memorize: "<strong>Watch Out:</strong> In direction angles, the sum of $\\cos^2$ is $1$, whereas the sum of $\\sin^2$ is $2$. For $\\cos(2\\alpha) + \\cos(2\\beta) + \\cos(2\\gamma)$, the result is $-1$."
+            }
+        ];
+
+        // ============================================================================
+        // 2. PHYSICS DATASET (35 CARDS)
+        // ============================================================================
+        const PHYSICS_DATA = [
+            // --- MEASUREMENTS & VECTORS ---
+            {
+                id: "p-meas-1",
+                chapter: "Measurements & Vectors",
+                badge: "NET",
+                title: "Uncertainty Propagation & Equal Vector Resultant Angles",
+                formula: String.raw`$$\text{If } Z = \frac{A^p B^q}{C^r} \implies (\%\Delta Z) = p(\%\Delta A) + q(\%\Delta B) + r(\%\Delta C)$$
+                $$\text{If } |\vec{A}| = |\vec{B}| = F \implies R = 2F\cos\left(\frac{\theta}{2}\right) \implies \begin{cases} \theta = 0^\circ \implies R = 2F \\ \theta = 60^\circ \implies R = \sqrt{3}F \\ \theta = 90^\circ \implies R = \sqrt{2}F \\ \theta = 120^\circ \implies R = F \end{cases}$$`,
+                shortcut: "Two equal vectors of magnitude $F$ at $\\theta = 120^\\circ$ produce a resultant of magnitude $F$. If $|\vec{A}+\\vec{B}| = |\\vec{A}-\\vec{B}|$, the angle between $\\vec{A}$ and $\\vec{B}$ is $90^\\circ$.",
+                memorize: "<strong>Key Dimensions:</strong> Planck's constant $h = [ML^2T^{-1}]$ (same as angular momentum $L$), Viscosity $\\eta = [ML^{-1}T^{-1}]$. <br><strong>Watch Out:</strong> In addition or subtraction $Z = A - B$, add absolute uncertainties ($\\Delta Z = \\Delta A + \\Delta B$), not percentage uncertainties."
+            },
+
+            // --- MECHANICS & PROJECTILE ---
+            {
+                id: "p-mech-1",
+                chapter: "Mechanics & Projectile",
+                badge: "NET",
+                title: "Projectile Motion Relations ($R, H, T$ & Complementary Angles)",
+                formula: String.raw`$$T = \frac{2v_i\sin\theta}{g}, \qquad H = \frac{v_i^2\sin^2\theta}{2g}, \qquad R = \frac{v_i^2\sin(2\theta)}{g}$$
+                $$R\tan\theta = 4H, \qquad R_{\max} = \frac{v_i^2}{g} \;(\text{at } 45^\circ), \qquad H = \frac{1}{8}gT^2$$`,
+                shortcut: "From $R\\tan\\theta = 4H$: <br>• Range equals Max Height ($R = H$) when $\\tan\\theta = 4 \\implies \\theta \\approx 76^\\circ$. <br>• At $\\theta = 45^\\circ$ ($R_{\\max}$), $H = R_{\\max}/4$. <br>• Complementary launch angles ($\\theta$ and $90^\\circ-\\theta$) give equal range $R = 4\\sqrt{H_1 H_2} = \\frac{1}{2}gT_1T_2$.",
+                memorize: "<strong>Energy at Peak:</strong> At the highest point, vertical velocity is zero, so $v_{\\text{top}} = v_i\\cos\\theta$, $K_{\\text{top}} = K_i \\cos^2\\theta$, and $U_{\\text{top}} = K_i\\sin^2\\theta$. At $\\theta = 45^\\circ$, $K_{\\text{top}} = \\frac{1}{2}K_i$."
+            },
+            {
+                id: "p-mech-2",
+                chapter: "Mechanics & Projectile",
+                badge: "ECAT",
+                title: "Momentum-KE Relation, Stopping Distance & 1D Elastic Collision",
+                formula: String.raw`$$K = \frac{p^2}{2m} \iff p = \sqrt{2mK}, \qquad S_{\text{stop}} = \frac{v_i^2}{2a} = \frac{K}{F_{\text{brake}}}$$
+                $$\text{1D Elastic }(m_1 = m_2): \quad v_1' = v_2 \;\text{ and }\; v_2' = v_1 \;\text{(Velocities Swap)}$$`,
+                shortcut: "For small changes ($<5\\%$), if $p$ increases by $x\\%$, $K$ increases by $2x\\%$. For large changes (e.g., $p$ increases by $100\\%$ so $p' = 2p$), $K' = 2^2 K = 4K$, which is a $300\\%$ increase.",
+                memorize: "<strong>Collision Limits ($v_2 = 0$):</strong> <br>• Heavy mass hits stationary light mass ($m_1 \\gg m_2$) $\\implies$ light mass moves at $\\approx 2v_1$. <br>• Light mass hits stationary heavy wall ($m_1 \\ll m_2$) $\\implies$ rebounds at $-v_1$."
+            },
+            {
+                id: "p-mech-3",
+                chapter: "Mechanics & Projectile",
+                badge: "GIKI",
+                title: "Average Speed, Relative Motion & Elevator Apparent Weight",
+                formula: String.raw`$$\text{Equal Distances: } v_{\text{avg}} = \frac{2v_1 v_2}{v_1 + v_2}, \qquad \text{Equal Times: } v_{\text{avg}} = \frac{v_1 + v_2}{2}$$
+                $$\text{Distance in } n\text{th second: } S_n = v_i + \frac{a}{2}(2n - 1), \qquad T_{\text{elevator}} = m(g \pm a)$$`,
+                shortcut: "For a body dropped from rest ($v_i = 0$), the distances covered in consecutive seconds ($1\\text{st}, 2\\text{nd}, 3\\text{rd}\\dots$) follow Galileo's odd-integer ratio $1 : 3 : 5 : 7$.",
+                memorize: "<strong>Elevator Apparent Weight:</strong> <br>• Accelerating UP: $W' = m(g+a)$ <br>• Accelerating DOWN: $W' = m(g-a)$ <br>• Constant velocity or at rest: $W' = mg$ <br>• Free fall ($a=g$): $W' = 0$."
+            },
+
+            // --- ROTATIONAL & CIRCULAR MOTION ---
+            {
+                id: "p-circ-1",
+                chapter: "Rotational & Circular",
+                badge: "NET",
+                title: "Orbital vs Escape Velocity, Gravity Variation & Vertical Circle",
+                formula: String.raw`$$v_{\text{orb}} = \sqrt{gR} \approx 7.9\text{ km/s}, \qquad v_{\text{esc}} = \sqrt{2gR} = \sqrt{2}\,v_{\text{orb}} \approx 11.2\text{ km/s}$$
+                $$g_{\text{depth}} = g\left(1 - \frac{d}{R}\right), \qquad g_{\text{height}} \approx g\left(1 - \frac{2h}{R}\right) \;\text{for } h \ll R$$
+                $$\text{Vertical Loop: } v_{\text{top}} \ge \sqrt{gr}, \quad v_{\text{mid}} \ge \sqrt{3gr}, \quad v_{\text{bottom}} \ge \sqrt{5gr}$$`,
+                shortcut: "Tension difference between the bottom and top of a vertical circle is always $T_{\\text{bottom}} - T_{\\text{top}} = 6mg$. Also, for small altitudes, the drop in $g$ at height $h$ equals the drop at depth $d = 2h$.",
+                memorize: "<strong>Satellite Total Energy:</strong> In orbit, $K = \\frac{GMm}{2r}$, $U = -\\frac{GMm}{r}$, and Total Energy $E = -K = \\frac{U}{2}$. <br><strong>Watch Out:</strong> Escape velocity does not depend on the mass of the launched object or launch angle."
+            },
+            {
+                id: "p-circ-2",
+                chapter: "Rotational & Circular",
+                badge: "GIKI",
+                title: "Moment of Inertia, Angular Momentum & Inclined Plane Rolling",
+                formula: String.raw`$$I_{\text{ring}} = MR^2, \quad I_{\text{disc}} = \frac{1}{2}MR^2, \quad I_{\text{solid sphere}} = \frac{2}{5}MR^2, \quad I_{\text{hollow sphere}} = \frac{2}{3}MR^2$$
+                $$v_{\text{bottom}} = \sqrt{\frac{2gh}{1 + \frac{I}{MR^2}}}, \qquad a_{\text{rolling}} = \frac{g\sin\theta}{1 + \frac{I}{MR^2}}, \qquad L = I\omega = \text{const}$$`,
+                shortcut: "Rolling race down an incline: smaller shape factor $\\beta = \\frac{I}{MR^2}$ reaches the bottom first, regardless of mass or radius. Order of arrival: **Solid Sphere ($0.4$) beats Disc/Cylinder ($0.5$) beats Hollow Sphere ($0.67$) beats Ring/Hoop ($1.0$)**.",
+                memorize: "<strong>Kinetic Energy Split:</strong> For a rolling hoop ($\\beta=1$), translational and rotational KE are equal ($50\\%$ each). For a rolling disc ($\\beta=1/2$), rotational KE is $\\frac{1}{3}$ of total KE."
+            },
+
+            // --- FLUIDS & OSCILLATIONS ---
+            {
+                id: "p-shm-1",
+                chapter: "Fluids & Oscillations",
+                badge: "NET",
+                title: "Continuity Equation, Torricelli's Efflux & Terminal Velocity",
+                formula: String.raw`$$A_1 v_1 = A_2 v_2 \implies v \propto \frac{1}{r^2}, \qquad v_{\text{efflux}} = \sqrt{2gh}, \qquad R_{\text{jet}} = 2\sqrt{h(H - h)}$$
+                $$F_{\text{drag}} = 6\pi\eta r v \implies v_t = \frac{2g r^2 (\rho - \sigma)}{9\eta} \implies v_t \propto r^2 \propto m^{2/3}$$`,
+                shortcut: "When $n$ identical droplets of terminal velocity $v_t$ coalesce into one larger drop, the new radius is $R = n^{1/3}r$, so the new terminal velocity is $V_{\\text{new}} = n^{2/3} v_t$ (e.g. $8$ drops $\\implies 8^{2/3} = 4v_t$).",
+                memorize: "<strong>Maximum Jet Range:</strong> Water emerging from a hole in a tank of height $H$ achieves maximum horizontal range $R_{\\max} = H$ when the hole is punched at mid-depth $h = H/2$."
+            },
+            {
+                id: "p-shm-2",
+                chapter: "Fluids & Oscillations",
+                badge: "GIKI",
+                title: "SHM Kinematics, Energy Partition & Spring Combinations",
+                formula: String.raw`$$v = \omega\sqrt{x_0^2 - x^2}, \qquad a = -\omega^2 x, \qquad K = U \text{ at } x = \pm\frac{x_0}{\sqrt{2}} \approx \pm 0.707 x_0$$
+                $$T_{\text{pendulum}} = 2\pi\sqrt{\frac{L}{g}}, \qquad T_{\text{spring}} = 2\pi\sqrt{\frac{m}{k}}, \qquad k_{\text{cut into } n} = n k$$`,
+                shortcut: "Cutting a spring of constant $k$ into $n$ equal pieces makes each piece stiffer with $k' = nk$, reducing its period to $T' = T/\\sqrt{n}$. Also, at $x = x_0/2$, $U = \\frac{1}{4}E$ and $K = \\frac{3}{4}E$.",
+                memorize: "<strong>Frequency of Energy:</strong> If displacement oscillates at frequency $f$, both $K$ and $U$ oscillate at frequency $2f$. <br><strong>Watch Out:</strong> For a Seconds Pendulum, $T = 2\\text{ s}$, $f = 0.5\\text{ Hz}$, and $L = \\frac{g}{\\pi^2} \\approx 0.993\\text{ m}$."
+            },
+
+            // --- WAVES & OPTICS ---
+            {
+                id: "p-wave-1",
+                chapter: "Waves & Optics",
+                badge: "NET",
+                title: "Speed of Sound, Organ Pipes & Doppler Effect",
+                formula: String.raw`$$v = \sqrt{\frac{\gamma P}{\rho}} = \sqrt{\frac{\gamma R T}{M}} \implies \frac{v_1}{v_2} = \sqrt{\frac{T_1}{T_2}}, \qquad v_t \approx v_0 + 0.61\,t(^\circ\text{C})$$
+                $$f_{\text{open}} = \frac{nv}{2L} \;(n=1,2,3\dots), \qquad f_{\text{closed}} = \frac{nv}{4L} \;(n=1,3,5\dots)$$
+                $$f' = f\left(\frac{v \pm v_o}{v \mp v_s}\right) \quad (\text{Top signs: Approaching } \implies f' \uparrow)$$`,
+                shortcut: "For the Doppler formula, if the source and observer move toward each other, perceived frequency must increase ($f' > f$), so choose $+v_o$ in the numerator and $-v_s$ in the denominator.",
+                memorize: "<strong>Pipe Ratio:</strong> For equal length $L$, $f_{\\text{open}} = 2f_{\\text{closed}}$. <br><strong>Watch Out:</strong> At constant temperature, the speed of sound in an ideal gas is completely independent of pressure $P$ because $P/\\rho$ remains constant."
+            },
+            {
+                id: "p-wave-2",
+                chapter: "Waves & Optics",
+                badge: "ECAT",
+                title: "Young's Double Slit (YDSE), Grating & Bragg's Law",
+                formula: String.raw`$$\Delta y = \frac{\lambda L}{d}, \qquad \Delta y_{\text{medium}} = \frac{\Delta y_{\text{air}}}{n}, \qquad \frac{I_{\max}}{I_{\min}} = \left(\frac{A_1 + A_2}{A_1 - A_2}\right)^2$$
+                $$\text{Bragg's Law: } 2d\sin\theta = m\lambda, \qquad \text{Grating: } d\sin\theta = m\lambda \;\left(d = \frac{1}{N}\right)$$`,
+                shortcut: "Submerging a YDSE setup in a liquid of refractive index $n$ reduces wavelength to $\\lambda/n$, shrinking fringe spacing to $\\Delta y / n$. Maximum observable grating order is $m_{\\max} = \\lfloor d/\\lambda \\rfloor$.",
+                memorize: "<strong>Malus's Law:</strong> $I = I_0 \\cos^2\\theta$. <br><strong>Watch Out:</strong> In Bragg's Law $2d\\sin\\theta = m\\lambda$, $\\theta$ is the glancing angle measured from the crystal plane, not the normal."
+            },
+            {
+                id: "p-wave-3",
+                chapter: "Waves & Optics",
+                badge: "NET",
+                title: "Lens Formula, Power, Microscope & Telescope Magnification",
+                formula: String.raw`$$\frac{1}{f} = \frac{1}{p} + \frac{1}{q}, \qquad P = \frac{1}{f(\text{m})} \;\text{(Dioptres)}, \qquad P_{\text{eq}} = P_1 + P_2 - dP_1P_2$$
+                $$M_{\text{simple}} = 1 + \frac{d}{f}, \qquad M_{\text{compound}} = \frac{L}{f_o}\left(1 + \frac{d}{f_e}\right), \qquad M_{\text{telescope}} = \frac{f_o}{f_e} \; (L = f_o + f_e)$$`,
+                shortcut: "Cutting a symmetric biconvex lens of focal length $f$ vertically into two plano-convex lenses doubles the focal length of each half to $2f$ (halving power). Cutting horizontally leaves $f$ unchanged (halving brightness).",
+                memorize: "<strong>Minimum Object-to-Real-Image Distance:</strong> For a convex lens of focal length $f$, the minimum distance between an object and its real screen image is $4f$ (occurring at $p = q = 2f$)."
+            },
+
+            // --- THERMODYNAMICS ---
+            {
+                id: "p-therm-1",
+                chapter: "Thermodynamics",
+                badge: "NET",
+                title: "First Law Processes, PV Curve Slopes & Carnot Efficiency",
+                formula: String.raw`$$Q = \Delta U + W, \qquad C_p - C_v = R, \qquad \gamma = \frac{C_p}{C_v} = 1 + \frac{2}{f}$$
+                $$\text{Slope}_{\text{Adiabatic}} = \gamma \times \text{Slope}_{\text{Isothermal}} = -\gamma\left(\frac{P}{V}\right)$$
+                $$\eta_{\text{Carnot}} = 1 - \frac{T_C}{T_H} = \frac{W}{Q_H}, \qquad v_{\text{rms}} = \sqrt{\frac{3RT}{M}} = \sqrt{\frac{3k_BT}{m}}$$`,
+                shortcut: "Gas $\\gamma$ values: Monoatomic $= 5/3 \\approx 1.67$, Diatomic $= 7/5 = 1.40$, Polyatomic $= 4/3 \\approx 1.33$. Lowering sink temperature $T_C$ by $\\Delta T$ increases Carnot efficiency more than raising $T_H$ by the same $\\Delta T$.",
+                memorize: "<strong>Average Translational KE per Molecule:</strong> $\\langle K \\rangle = \\frac{3}{2}k_BT$, which depends only on absolute temperature $T$, not molecular mass. <br><strong>Watch Out:</strong> Always convert ${}^\\circ\\text{C}$ to Kelvin ($+273$) before using $\\eta = 1 - T_C/T_H$ or $v_{\\text{rms}} \\propto \\sqrt{T}$."
+            },
+
+            // --- ELECTROSTATICS & CIRCUITS ---
+            {
+                id: "p-elec-1",
+                chapter: "Electrostatics & Circuits",
+                badge: "NET",
+                title: "Coulomb's Law, Gauss's Law, Potential Gradient & Capacitors",
+                formula: String.raw`$$F_{\text{med}} = \frac{F_{\text{vac}}}{\varepsilon_r}, \qquad \Phi_e = \frac{Q_{\text{enc}}}{\varepsilon_0}, \qquad E = -\frac{\Delta V}{\Delta r}, \qquad C = \frac{\varepsilon_0 \varepsilon_r A}{d}$$
+                $$U = \frac{1}{2}CV^2 = \frac{Q^2}{2C} = \frac{1}{2}QV, \qquad u_{\text{density}} = \frac{1}{2}\varepsilon_0 \varepsilon_r E^2, \qquad \tau = RC$$`,
+                shortcut: "Dielectric insertion ($\varepsilon_r$): <br>• **Battery Disconnected ($Q$ constant):** $C \\uparrow$, $V \\downarrow$, $E \\downarrow$, and stored energy $U = \\frac{Q^2}{2C}$ decreases by $\\varepsilon_r$. <br>• **Battery Connected ($V$ constant):** $C \\uparrow$, $Q \\uparrow$, $E$ unchanged, and $U = \\frac{1}{2}CV^2$ increases by $\\varepsilon_r$.",
+                memorize: "<strong>Hollow Charged Conducting Sphere:</strong> Inside the sphere ($r < R$), electric field $E = 0$ everywhere, but electric potential $V$ is constant and equal to the surface value $\\frac{kQ}{R}$."
+            },
+            {
+                id: "p-curr-1",
+                chapter: "Electrostatics & Circuits",
+                badge: "NET",
+                title: "Wire Stretching, Bulb Brightness & Maximum Power Transfer",
+                formula: String.raw`$$\text{Stretched to } n\times \text{length (Volume const): } R_{\text{new}} = n^2 R, \qquad \text{Radius } \frac{r}{n} \implies R_{\text{new}} = n^4 R$$
+                $$\text{Series Bulbs: } \frac{1}{P_{\text{eq}}} = \frac{1}{P_1} + \frac{1}{P_2}, \qquad \text{Parallel Bulbs: } P_{\text{eq}} = P_1 + P_2$$
+                $$V_t = E - Ir, \qquad P_{\text{out, max}} = \frac{E^2}{4r} \quad (\text{when } R = r)$$`,
+                shortcut: "Bulb comparison ($40\\text{ W}$ vs $100\\text{ W}$): The $40\\text{ W}$ bulb has higher resistance ($R = V_{\\text{rated}}^2/P$). <br>• In **Series** ($P = I^2R$): the $40\\text{ W}$ bulb is brighter. <br>• In **Parallel** ($P = V^2/R$): the $100\\text{ W}$ bulb is brighter.",
+                memorize: "<strong>Cut &amp; Parallelized Wire:</strong> Cutting a wire of resistance $R$ into $n$ equal parts and connecting them in parallel gives $R_{\\text{eq}} = \\frac{R}{n^2}$. <br><strong>Kirchhoff Conservation:</strong> KCL (1st rule) conserves Charge; KVL (2nd rule) conserves Energy."
+            },
+
+            // --- ELECTROMAGNETISM & AC ---
+            {
+                id: "p-mag-1",
+                chapter: "Electromagnetism & AC",
+                badge: "NET",
+                title: "Lorentz Force, Cyclotron Radius, Solenoid & Transformer",
+                formula: String.raw`$$\vec{F} = q(\vec{v}\times\vec{B}) \implies W_{\text{mag}} = 0, \qquad r = \frac{mv}{qB} = \frac{\sqrt{2mK}}{qB} = \frac{1}{B}\sqrt{\frac{2mV}{q}}$$
+                $$T_{\text{cyclotron}} = \frac{2\pi m}{qB}, \qquad B_{\text{solenoid}} = \mu_0 n I, \qquad \frac{V_s}{V_p} = \frac{N_s}{N_p} = \frac{I_p}{I_s}$$`,
+                shortcut: "Proton ($m, e$), Deuteron ($2m, e$), and Alpha ($4m, 2e$) entering uniform $B$: <br>• Same velocity $v$ ($r \\propto m/q$): $r_p : r_d : r_\\alpha = 1 : 2 : 2$. <br>• Same kinetic energy $K$ ($r \\propto \\sqrt{m}/q$): $r_p : r_d : r_\\alpha = 1 : \\sqrt{2} : 1$. <br>• Same accelerating voltage $V$ ($r \\propto \\sqrt{m/q}$): $r_p : r_d : r_\\alpha = 1 : \\sqrt{2} : \\sqrt{2}$.",
+                memorize: "<strong>Parallel Current Wires:</strong> Currents in the same direction attract; currents in opposite directions repel. <br><strong>Instrument Conversion:</strong> Shunt $R_s = \\frac{I_g R_g}{I - I_g}$ (low resistance in parallel for Ammeter); Multiplier $R_h = \\frac{V}{I_g} - R_g$ (high resistance in series for Voltmeter)."
+            },
+            {
+                id: "p-mag-2",
+                chapter: "Electromagnetism & AC",
+                badge: "ECAT",
+                title: "AC Reactance, Impedance, Power Factor & RLC Resonance",
+                formula: String.raw`$$X_L = 2\pi f L, \qquad X_C = \frac{1}{2\pi f C}, \qquad Z = \sqrt{R^2 + (X_L - X_C)^2}$$
+                $$P_{\text{avg}} = V_{\text{rms}} I_{\text{rms}} \cos\phi \quad \left(\cos\phi = \frac{R}{Z}\right), \qquad f_r = \frac{1}{2\pi\sqrt{LC}}$$`,
+                shortcut: "In a pure inductor or pure capacitor, phase angle is $\\phi = 90^\\circ$, so $\\cos 90^\\circ = 0$ and average power consumed is zero (wattless current). An ideal choke coil drops AC voltage without wasting power.",
+                memorize: "<strong>At Resonance ($X_L = X_C$):</strong> Series RLC has minimum impedance $Z = R$ and maximum current, whereas a Parallel LC tank circuit has maximum impedance and minimum line current."
+            },
+
+            // --- MODERN PHYSICS & ELECTRONICS ---
+            {
+                id: "p-mod-1",
+                chapter: "Modern & Electronics",
+                badge: "NET",
+                title: "Relativity, Photoelectric Effect, Compton Shift & de Broglie",
+                formula: String.raw`$$L = L_0\sqrt{1 - \frac{v^2}{c^2}}, \qquad t = \frac{t_0}{\sqrt{1 - v^2/c^2}}, \qquad K_{\max} = eV_0 = hf - \phi$$
+                $$\Delta\lambda = \frac{h}{m_0 c}(1 - \cos\theta), \qquad \lambda_d = \frac{h}{p} = \frac{h}{\sqrt{2mqV}} \;\left(\lambda_e \approx \frac{12.27}{\sqrt{V}}\text{ \AA}\right)$$`,
+                shortcut: "At $v = \\frac{\\sqrt{3}}{2}c \\approx 0.866c$, the Lorentz factor is $\\gamma = 2$ (length halves, time and relativistic mass double). In Compton scattering, maximum wavelength shift occurs at backscattering ($\\theta = 180^\\circ$): $\\Delta\\lambda_{\\max} = \\frac{2h}{m_0c} = 0.0485\\text{ \\AA}$.",
+                memorize: "<strong>Photoelectric Rule:</strong> Light intensity controls the number of emitted electrons (photocurrent), whereas light frequency controls maximum kinetic energy $K_{\\max}$ and stopping potential $V_0$."
+            },
+            {
+                id: "p-mod-2",
+                chapter: "Modern & Electronics",
+                badge: "NET",
+                title: "Bohr Hydrogen Atom, Spectral Series & Radioactive Half-Life",
+                formula: String.raw`$$r_n = 0.53\,n^2\text{ \AA}, \qquad v_n = \frac{2.18\times 10^6}{n}\text{ m/s}, \qquad E_n = -\frac{13.6}{n^2}\text{ eV}$$
+                $$\frac{1}{\lambda} = R_H\left(\frac{1}{n_f^2} - \frac{1}{n_i^2}\right), \qquad \frac{N}{N_0} = \left(\frac{1}{2}\right)^n, \qquad T_{1/2} = \frac{0.693}{\lambda} = 0.693\,\tau$$`,
+                shortcut: "For any transition series ending at $n_f$, the ratio of maximum wavelength ($n_i = n_f + 1$) to minimum wavelength ($n_i = \\infty$) is $\\frac{\\lambda_{\\max}}{\\lambda_{\\min}} = \\frac{(n_f+1)^2}{(n_f+1)^2 - n_f^2}$. For Lyman ($n_f=1$), $\\lambda_{\\max}/\\lambda_{\\min} = 4/3$; for Balmer ($n_f=2$), it is $9/5$.",
+                memorize: "<strong>Spectral Regions:</strong> Lyman ($n_f=1$, UV), Balmer ($n_f=2$, Visible), Paschen/Brackett/Pfund ($n_f=3,4,5$, IR). <br><strong>Watch Out:</strong> Remaining fraction is $(1/2)^n$; decayed fraction is $1 - (1/2)^n$."
+            },
+            {
+                id: "p-mod-3",
+                chapter: "Modern & Electronics",
+                badge: "GIKI",
+                title: "Rectifiers, Transistor Current Gain ($\\alpha, \\beta$), Op-Amp & Logic Gates",
+                formula: String.raw`$$I_E = I_B + I_C, \qquad \alpha = \frac{I_C}{I_E}, \qquad \beta = \frac{I_C}{I_B} \implies \beta = \frac{\alpha}{1 - \alpha}, \quad \alpha = \frac{\beta}{\beta + 1}$$
+                $$G_{\text{inv}} = -\frac{R_f}{R_1}, \qquad G_{\text{non-inv}} = 1 + \frac{R_f}{R_1}, \qquad \overline{A + B} = \overline{A}\cdot\overline{B}, \quad \overline{A \cdot B} = \overline{A} + \overline{B}$$`,
+                shortcut: "If $\\alpha = 0.99$, then $\\beta = \\frac{0.99}{1-0.99} = 99$. For $50\\text{ Hz}$ AC input, half-wave output ripple is $50\\text{ Hz}$, while full-wave output ripple is $100\\text{ Hz}$ ($2f_{\\text{in}}$).",
+                memorize: "<strong>Universal Gates:</strong> NAND and NOR can construct any boolean function. Knee/barrier potential is $0.7\\text{ V}$ for Silicon and $0.3\\text{ V}$ for Germanium."
+            }
+        ];
+
+        // ============================================================================
+        // 3. ENGLISH VOCABULARY DATASET (48 WORDS)
+        // ============================================================================
+        const ENGLISH_DATA = [
+            { id: "v-1", word: "Abate", pos: "Verb", category: "NET Core", urdu: "کم ہونا / شدت گھٹنا", romanUrdu: "Kam hona / Shiddat ghatna", synonyms: ["Subside", "Diminish", "Dwindle", "Moderate"], antonyms: ["Intensify", "Escalate", "Augment", "Aggravate"], sentence: "The engineers waited for the wind speed to abate before lifting the steel truss.", mnemonic: "Rebate reduces a price; Abate reduces intensity or force." },
+            { id: "v-2", word: "Aberration", pos: "Noun", category: "GIKI Context", urdu: "انحراف / معمول سے ہٹ کر", romanUrdu: "Inhiraf / Mamool se hat kar", synonyms: ["Anomaly", "Deviation", "Irregularity", "Oddity"], antonyms: ["Normality", "Regularity", "Conformity", "Standard"], sentence: "The sudden voltage spike was an aberration caused by a loose ground wire.", mnemonic: "Link to 'Chromatic Aberration' in lenses—light rays deviating from the focal point." },
+            { id: "v-3", word: "Abstemious", pos: "Adjective", category: "GIKI Context", urdu: "معتدل / پرہیزگار", romanUrdu: "Mo'tadil / Parhezgar", synonyms: ["Temperate", "Ascetic", "Austere", "Restrained"], antonyms: ["Gluttonous", "Self-indulgent", "Hedonistic", "Intemperate"], sentence: "Known for his abstemious lifestyle, the researcher lived on simple meals and long study hours.", mnemonic: "ABSTAIN + MIOUS: Someone who abstains from excess food or indulgence." },
+            { id: "v-4", word: "Acumen", pos: "Noun", category: "NET Core", urdu: "بصیرت / ذہانت / تیز فہمی", romanUrdu: "Baseerat / Tez-fehmi", synonyms: ["Shrewdness", "Astuteness", "Perspicacity", "Insight"], antonyms: ["Obtuseness", "Naivety", "Folly", "Ignorance"], sentence: "Her technical acumen allowed her to spot the flaw in the thermal design immediately.", mnemonic: "ACUTE + MIND: Sharpness of mind in practical decisions." },
+            { id: "v-5", word: "Admonish", pos: "Verb", category: "Tone & Attitude", urdu: "سرزنش کرنا / تنبیہ کرنا", romanUrdu: "Sarzanish karna / Tanbeeh karna", synonyms: ["Reprimand", "Chide", "Rebuke", "Censure"], antonyms: ["Commend", "Applaud", "Laud", "Extol"], sentence: "The lab supervisor admonished the students for working without safety goggles.", mnemonic: "AD + MONITOR: A monitor warning or scolding students gently." },
+            { id: "v-6", word: "Alacrity", pos: "Noun", category: "NET Core", urdu: "پھرتی / خوش دلی اور آمادگی", romanUrdu: "Phurti / Khush-dili aur aamadgi", synonyms: ["Eagerness", "Briskness", "Readiness", "Promptness"], antonyms: ["Apathy", "Reluctance", "Lethargy", "Sluggishness"], sentence: "He accepted the research fellowship with alacrity and started work the next morning.", mnemonic: "A-LAC-RITY: Offered a 'lac' (100,000) rupees, anyone responds with brisk eagerness." },
+            { id: "v-7", word: "Ameliorate", pos: "Verb", category: "NET Core", urdu: "بہتر بنانا / اصلاح کرنا", romanUrdu: "Behtar banana / Islah karna", synonyms: ["Improve", "Mitigate", "Alleviate", "Enhance"], antonyms: ["Worsen", "Exacerbate", "Deteriorate", "Aggravate"], sentence: "Capacitor banks were added to ameliorate the power factor of the industrial plant.", mnemonic: "Contrast with Deteriorate (worsen); Ameliorate means to make a bad situation better." },
+            { id: "v-8", word: "Anachronism", pos: "Noun", category: "GIKI Context", urdu: "اپنے دور سے باہر کی چیز", romanUrdu: "Apne daur se bahar ki cheez", synonyms: ["Misplacement", "Relic", "Solecism", "Holdover"], antonyms: ["Modernity", "Trend", "Innovation", "Contemporaneity"], sentence: "Using a slide rule in a modern aerospace lab feels like an anachronism.", mnemonic: "ANA (against) + CHRONOS (time): Something chronologically out of place." },
+            { id: "v-9", word: "Antipathy", pos: "Noun", category: "Tone & Attitude", urdu: "شدید نفرت / بیزاری", romanUrdu: "Shadeed nafrat / Bezari", synonyms: ["Hostility", "Aversion", "Animus", "Animosity"], antonyms: ["Affinity", "Rapport", "Sympathy", "Predilection"], sentence: "He felt a strong antipathy toward rote memorization without conceptual understanding.", mnemonic: "ANTI (against) + PATHOS (feeling): Deep-seated dislike." },
+            { id: "v-10", word: "Apocryphal", pos: "Adjective", category: "GIKI Context", urdu: "فرضی / مشکوک صداقت والا", romanUrdu: "Farzi / Mashkook sadaqat wala", synonyms: ["Fabricated", "Spurious", "Dubious", "Unverified"], antonyms: ["Authentic", "Verifiable", "Genuine", "Canonical"], sentence: "The story of Newton's apple falling directly on his head is largely apocryphal.", mnemonic: "CRYPTO (hidden/secret): A story of doubtful authenticity circulated as true." },
+            { id: "v-11", word: "Arcane", pos: "Adjective", category: "GIKI Context", urdu: "خفیہ / جو صرف چند ماہرین جانیں", romanUrdu: "Khufiya / Pur-israr", synonyms: ["Esoteric", "Obscure", "Cryptic", "Recondite"], antonyms: ["Accessible", "Commonplace", "Transparent", "Familiar"], sentence: "The legacy mainframe ran on arcane assembly commands known only to two senior engineers.", mnemonic: "Sounds like ARCHIVE—obscure knowledge locked away in old archives." },
+            { id: "v-12", word: "Assiduous", pos: "Adjective", category: "NET Core", urdu: "محنتی / مستقل مزاج", romanUrdu: "Mehnati / Mustaqil-mizaj", synonyms: ["Diligent", "Industrious", "Sedulous", "Persevering"], antonyms: ["Indolent", "Negligent", "Slothful", "Idle"], sentence: "Assiduous practice of past paper problems is the most reliable way to build speed.", mnemonic: "SIT + DUOUS: Sitting at your desk steadily until the work is finished." },
+            { id: "v-13", word: "Audacious", pos: "Adjective", category: "Tone & Attitude", urdu: "بے باک / نڈر / جسارت والا", romanUrdu: "Be-baak / Nidar / Jasarat wala", synonyms: ["Bold", "Daring", "Intrepid", "Brazen"], antonyms: ["Timid", "Cowardly", "Craven", "Diffident"], sentence: "The team proposed an audacious suspension bridge design spanning the deep gorge.", mnemonic: "AUDACITY = bold courage or fearless risk-taking." },
+            { id: "v-14", word: "Austere", pos: "Adjective", category: "Tone & Attitude", urdu: "سادہ اور سخت / بے تکلف", romanUrdu: "Saada aur sakht", synonyms: ["Stark", "Spartan", "Severe", "Ascetic"], antonyms: ["Ornate", "Lavish", "Opulent", "Luxurious"], sentence: "The dormitory rooms were austere, containing only a bed, a desk, and a reading lamp.", mnemonic: "AUSTRALIA desert—stark, plain, and stripped of luxury." },
+            { id: "v-15", word: "Banal", pos: "Adjective", category: "NET Core", urdu: "فرسودہ / گھسا پٹا / معمولی", romanUrdu: "Farsooda / Ghisa-pita", synonyms: ["Trite", "Hackneyed", "Platitudinous", "Insipid"], antonyms: ["Original", "Novel", "Fresh", "Profound"], sentence: "Avoid banal opening lines in your essay; start with a concrete observation instead.", mnemonic: "BAN-ALL: Ban all overused, cliché expressions." },
+            { id: "v-16", word: "Belligerent", pos: "Adjective", category: "Tone & Attitude", urdu: "جھگڑالو / جنگجو", romanUrdu: "Jhagralu / Jangju", synonyms: ["Pugnacious", "Hostile", "Bellicose", "Combative"], antonyms: ["Pacifist", "Amiable", "Peaceable", "Conciliatory"], sentence: "A belligerent response during a technical review only delays finding the actual bug.", mnemonic: "BELLUM (Latin for War): Ready to start a fight." },
+            { id: "v-17", word: "Bolster", pos: "Verb", category: "NET Core", urdu: "تقویت دینا / سہارا دینا", romanUrdu: "Taqwiyat dena / Sahara dena", synonyms: ["Reinforce", "Buttress", "Fortify", "Sustain"], antonyms: ["Undermine", "Weaken", "Subvert", "Impair"], sentence: "Additional carbon-fiber ribs were added to bolster the aircraft wing against torsion.", mnemonic: "A bolster is a thick structural pillow that supports weight." },
+            { id: "v-18", word: "Cacophony", pos: "Noun", category: "NET Core", urdu: "شور و غل / بے ہنگم آوازیں", romanUrdu: "Shor-o-ghul / Be-hangam aawazein", synonyms: ["Din", "Discord", "Racket", "Dissonance"], antonyms: ["Euphony", "Harmony", "Melody", "Silence"], sentence: "A cacophony of grinding gears indicated that the transmission bearing had failed.", mnemonic: "CACO (bad/harsh) + PHON (sound) vs. EUPHONY (pleasant sound)." },
+            { id: "v-19", word: "Candid", pos: "Adjective", category: "NET Core", urdu: "صاف گو / بے لاگ / کھرا", romanUrdu: "Saaf-go / Be-laag / Khara", synonyms: ["Frank", "Forthright", "Unreserved", "Sincere"], antonyms: ["Devious", "Evasive", "Guarded", "Dissembling"], sentence: "The project lead gave a candid assessment of the schedule risks.", mnemonic: "Candid camera = unposed, honest, and straightforward." },
+            { id: "v-20", word: "Capricious", pos: "Adjective", category: "GIKI Context", urdu: "من موجی / پل میں بدلنے والا", romanUrdu: "Man-mauji / Pal mein badalne wala", synonyms: ["Fickle", "Mercurial", "Erratic", "Whimsical"], antonyms: ["Steadfast", "Consistent", "Predictable", "Resolute"], sentence: "High-altitude weather in Gilgit is capricious, shifting from clear skies to snow squalls rapidly.", mnemonic: "CAPRICE = a sudden, unpredictable change of mood or behavior." },
+            { id: "v-21", word: "Castigate", pos: "Verb", category: "Tone & Attitude", urdu: "شدید تنقید کرنا / آڑے ہاتھوں لینا", romanUrdu: "Shadeed tanqeed karna", synonyms: ["Chastise", "lambaste", "Berate", "Upbraid"], antonyms: ["Exonerate", "Praise", "Compliment", "Flatter"], sentence: "The inquiry board castigated the contractor for using substandard concrete.", mnemonic: "CAST + GATE: Casting someone out the gate with harsh reprimands." },
+            { id: "v-22", word: "Chicanery", pos: "Noun", category: "GIKI Context", urdu: "چالاکی / فریب کاری / ہیر پھیر", romanUrdu: "Chalaki / Fareb-kari", synonyms: ["Subterfuge", "Deception", "Duplicity", "Trickery"], antonyms: ["Honesty", "Candor", "Integrity", "Veracity"], sentence: "The audit uncovered financial chicanery hidden inside the procurement ledgers.", mnemonic: "Sounds like SHIKARI (hunter) setting clever traps and trickery." },
+            { id: "v-23", word: "Coalesce", pos: "Verb", category: "NET Core", urdu: "مل کر ایک ہو جانا / ضم ہونا", romanUrdu: "Mil kar aik ho jana", synonyms: ["Amalgamate", "Merge", "Fuse", "Consolidate"], antonyms: ["Disperse", "Fragment", "Bifurcate", "Split"], sentence: "Eight small mercury droplets coalesce into a single larger sphere to minimize surface energy.", mnemonic: "CO (together) + ALESCE (grow): Growing together into one mass." },
+            { id: "v-24", word: "Cogent", pos: "Adjective", category: "NET Core", urdu: "مدلل / قائل کرنے والا مضبوط استدلال", romanUrdu: "Mudallal / Qaail karne wala", synonyms: ["Convincing", "Compelling", "Persuasive", "Lucid"], antonyms: ["Weak", "Specious", "Unconvincing", "Muddled"], sentence: "She wrote a cogent derivation that settled the debate in three lines.", mnemonic: "CO + AGENT: An agent whose logic is clear, tight, and convincing." },
+            { id: "v-25", word: "Convoluted", pos: "Adjective", category: "NET Core", urdu: "پیچیدہ / الجھا ہوا", romanUrdu: "Pecheeda / Uljha hua", synonyms: ["Intricate", "Labyrinthine", "Tortuous", "Byzantine"], antonyms: ["Straightforward", "Streamlined", "Direct", "Simple"], sentence: "Instead of a convoluted five-page solution, use dimensional analysis to check the units.", mnemonic: "CO + VOLUTE (roll/twist): Twisted together in many complicated folds." },
+            { id: "v-26", word: "Craven", pos: "Adjective", category: "Tone & Attitude", urdu: "بزدل / ڈرپوک", romanUrdu: "Buzdil / Darpok", synonyms: ["Cowardly", "Pusillanimous", "Timorous", "Faint-hearted"], antonyms: ["Valiant", "Intrepid", "Audacious", "Stouthearted"], sentence: "Refusing to report a critical safety defect out of fear is a craven decision.", mnemonic: "CROW + RAVEN: Cowering in fear like a startled bird." },
+            { id: "v-27", word: "Deferential", pos: "Adjective", category: "Tone & Attitude", urdu: "مؤدبانہ / احترام سے بھرپور", romanUrdu: "Mo'addibana / Ehtiram karne wala", synonyms: ["Respectful", "Reverent", "Courteous", "Submissive"], antonyms: ["Arrogant", "Insolent", "Impudent", "Contemptuous"], sentence: "The apprentices were deferential toward the master machinist.", mnemonic: "DEFER = to yield respectfully to someone's seniority or judgment." },
+            { id: "v-28", word: "Deride", pos: "Verb", category: "Tone & Attitude", urdu: "تمسخر اڑانا / تضحیک کرنا", romanUrdu: "Tamaskhur urana / Mazaaq urana", synonyms: ["Mock", "Ridicule", "Scoff", "Disparage"], antonyms: ["Revere", "Praise", "Venerate", "Respect"], sentence: "Critics once derided reusable rockets as economically impossible.", mnemonic: "DE + RIDE: Riding someone down with mockery." },
+            { id: "v-29", word: "Desiccate", pos: "Verb", category: "GIKI Context", urdu: "خشک کرنا / نمی نکال دینا", romanUrdu: "Khushk karna / Nami nikal dena", synonyms: ["Dehydrate", "Parch", "Wither", "Shrivel"], antonyms: ["Moisten", "Saturate", "Hydrate", "Soak"], sentence: "Silica gel packets are placed inside instrument boxes to desiccate the trapped air.", mnemonic: "Lab DESICCATOR = airtight glass jar used in chemistry to keep samples bone-dry." },
+            { id: "v-30", word: "Diffident", pos: "Adjective", category: "Tone & Attitude", urdu: "شرمیلا / خود اعتمادی کی کمی والا", romanUrdu: "Sharmeela / Hichkichane wala", synonyms: ["Bashful", "Meek", "Unassuming", "Retiring"], antonyms: ["Confident", "Assertive", "Brash", "Poised"], sentence: "Though diffident in large crowds, he spoke with authority when explaining circuit theory.", mnemonic: "Opposite of CONFIDENT (Fide = trust; Diffident = lacking trust in oneself)." },
+            { id: "v-31", word: "Dogmatic", pos: "Adjective", category: "Tone & Attitude", urdu: "ہٹ دھرم / اپنی رائے مسلط کرنے والا", romanUrdu: "Hat-dharm / Kattar", synonyms: ["Opinionated", "Doctrinaire", "Peremptory", "Inflexible"], antonyms: ["Open-minded", "Flexible", "Skeptical", "Latitudinarian"], sentence: "Science progresses by testing hypotheses empirically, not by clinging to dogmatic beliefs.", mnemonic: "DOGMA = rigid rules asserted as undeniable truth without proof." },
+            { id: "v-32", word: "Ebullient", pos: "Adjective", category: "Tone & Attitude", urdu: "پرجوش / کھلکھلاتا ہوا", romanUrdu: "Pur-josh / Khush-mizaj", synonyms: ["Exuberant", "Buoyant", "Jovial", "Vivacious"], antonyms: ["Morose", "Glum", "Sullen", "Downcast"], sentence: "The team was ebullient after their autonomous rover completed the obstacle course.", mnemonic: "BULL + ENERGETIC: Boiling over with enthusiasm (from Latin ebullire, to bubble up)." },
+            { id: "v-33", word: "Enervate", pos: "Verb", category: "NET Core", urdu: "کمزور کر دینا / توانائی نچوڑ لینا", romanUrdu: "Kamzor kar dena / Thaka dena", synonyms: ["Exhaust", "Debilitate", "Sapping", "Devitalize"], antonyms: ["Invigorate", "Energize", "Fortify", "Vitalize"], sentence: "Working in extreme humidity without ventilation quickly enervates field technicians.", mnemonic: "TRAP ALERT: Enervate does NOT mean energize! E (out) + NERVE = drain all nerve and strength out." },
+            { id: "v-34", word: "Ephemeral", pos: "Adjective", category: "NET Core", urdu: "عارضی / چند روزہ / فانی", romanUrdu: "Aarzi / Chand-roza / Faani", synonyms: ["Transient", "Fleeting", "Short-lived", "Evanescent"], antonyms: ["Permanent", "Perpetual", "Enduring", "Eternal"], sentence: "Transuranic nuclei produced in particle accelerators are ephemeral, lasting milliseconds.", mnemonic: "E-PHEM-ERAL: Like trends on social media—gone in a day." },
+            { id: "v-35", word: "Equivocate", pos: "Verb", category: "GIKI Context", urdu: "گول مول بات کرنا / ٹال مٹول کرنا", romanUrdu: "Gol-mol baat karna / Taal-matol", synonyms: ["Prevaricate", "Waffle", "Hedge", "Evade"], antonyms: ["Confront", "Clarify", "Speak plainly", "Be direct"], sentence: "Asked whether the bridge met load standards, the witness began to equivocate.", mnemonic: "EQUI (equal) + VOC (voice): Speaking ambiguously to conceal the truth." },
+            { id: "v-36", word: "Erudite", pos: "Adjective", category: "Tone & Attitude", urdu: "صاحبِ علم / متبحر عالم", romanUrdu: "Sahib-e-ilm / Bohat parha likha", synonyms: ["Scholarly", "Learned", "Savvy", "Polymathic"], antonyms: ["Ignorant", "Unlettered", "Illiterate", "Benighted"], sentence: "The keynote lecture was delivered by an erudite physicist specializing in plasma confinement.", mnemonic: "E (out of) + RUDE (raw/untrained): Polished through deep study and scholarship." },
+            { id: "v-37", word: "Exacerbate", pos: "Verb", category: "NET Core", urdu: "مزید بگاڑنا / شدت بڑھانا", romanUrdu: "Mazeed bigarna / Shiddat barhana", synonyms: ["Aggravate", "Worsen", "Inflame", "Compound"], antonyms: ["Alleviate", "Mitigate", "Ameliorate", "Assuage"], sentence: "Pouring cold water onto an overheated engine block will only exacerbate the thermal cracking.", mnemonic: "EX + ACERB (bitter/harsh): To make a problem sharper and worse." },
+            { id: "v-38", word: "Fastidious", pos: "Adjective", category: "Tone & Attitude", urdu: "باریک بین / نفاست پسند", romanUrdu: "Bareek-been / Nafasat-pasand", synonyms: ["Meticulous", "Punctilious", "Scrupulous", "Exacting"], antonyms: ["Sloppy", "Careless", "Negligent", "Lax"], sentence: "Optical mirror polishing requires fastidious control over surface tolerances.", mnemonic: "Fussy and hard to please about every tiny detail." },
+            { id: "v-39", word: "Foment", pos: "Verb", category: "GIKI Context", urdu: "ہوا دینا / بھڑکانا / اکسانا", romanUrdu: "Hawa dena / Bharkana", synonyms: ["Instigate", "Incite", "Provoke", "Agitation"], antonyms: ["Quell", "Suppress", "Pacify", "Allay"], sentence: "Misinformation can foment unnecessary panic during a grid blackout.", mnemonic: "Sounds like FERMENT—stirring up trouble until it boils over." },
+            { id: "v-40", word: "Garrulous", pos: "Adjective", category: "NET Core", urdu: "باتونی / فضول گو", romanUrdu: "Batooni / Bohat zyada bolne wala", synonyms: ["Loquacious", "Talkative", "Voluble", "Verbose"], antonyms: ["Laconic", "Taciturn", "Reticent", "Reserved"], sentence: "The garrulous host spent thirty minutes introducing a ten-minute presentation.", mnemonic: "Contrast directly with Laconic and Taciturn." },
+            { id: "v-41", word: "Iconoclast", pos: "Noun", category: "GIKI Context", urdu: "فرسودہ روایات کو توڑنے والا", romanUrdu: "Purani riwayat ko torne wala", synonyms: ["Nonconformist", "Maverick", "Challenger", "Dissenter"], antonyms: ["Conformist", "Traditionalist", "Orthodox", "Adherent"], sentence: "Galileo was an iconoclast who challenged Aristotelian mechanics with inclined-plane experiments.", mnemonic: "ICON + CLAST (breaker): A person who overturns established dogma." },
+            { id: "v-42", word: "Inchoate", pos: "Adjective", category: "GIKI Context", urdu: "ابتدائی حالت میں / نامکمل", romanUrdu: "Ibtidai halat mein / Na-mukammal", synonyms: ["Nascent", "Rudimentary", "Embryonic", "Incipient"], antonyms: ["Developed", "Mature", "Crystallized", "Complete"], sentence: "At that stage, the startup had only an inchoate sketch of the battery management circuit.", mnemonic: "IN + CHOATE (not yet coherent): Just beginning to form; not fully developed." },
+            { id: "v-43", word: "Laconic", pos: "Adjective", category: "NET Core", urdu: "مختصر اور جامع", romanUrdu: "Mukhtasir aur jaame / Kam-go", synonyms: ["Concise", "Succinct", "Terse", "Pithy"], antonyms: ["Garrulous", "Loquacious", "Wordy", "Prolix"], sentence: "His laconic lab note simply read: 'Fuse blown; replaced with 5A slow-blow.'", mnemonic: "LACK of superfluous words—maximum meaning in minimum words." },
+            { id: "v-44", word: "Lucid", pos: "Adjective", category: "NET Core", urdu: "واضح / روشن / عام فہم", romanUrdu: "Wazeh / Saaf aur aasan", synonyms: ["Clear", "Intelligible", "Cogent", "Limpid"], antonyms: ["Obscure", "Convoluted", "Muddled", "Nebulous"], sentence: "A good textbook provides lucid physical intuition before introducing heavy vector calculus.", mnemonic: "From Latin LUX (light)—transparent and easy to understand." },
+            { id: "v-45", word: "Mitigate", pos: "Verb", category: "NET Core", urdu: "شدت کم کرنا / تخفیف کرنا", romanUrdu: "Shiddat ya nuqsan kam karna", synonyms: ["Alleviate", "Assuage", "Palliate", "Lessen"], antonyms: ["Aggravate", "Exacerbate", "Intensify", "Worsen"], sentence: "Lead shielding is used around X-ray tubes to mitigate radiation exposure.", mnemonic: "Make milder or less severe." },
+            { id: "v-46", word: "Obsequious", pos: "Adjective", category: "Tone & Attitude", urdu: "چاپلوس / خوشامدی", romanUrdu: "Chaaploos / Khushamdi", synonyms: ["Servile", "Sycophantic", "Fawning", "Subservient"], antonyms: ["Assertive", "Independent", "Domineering", "Candid"], sentence: "A reliable safety engineer gives objective reports rather than obsequious agreement.", mnemonic: "Overly submissive and eager to please." },
+            { id: "v-47", word: "Pragmatic", pos: "Adjective", category: "NET Core", urdu: "عملی / حقیقت پسندانہ", romanUrdu: "Amali / Haqeeqat-pasandana", synonyms: ["Practical", "Realistic", "Utilitarian", "Matter-of-fact"], antonyms: ["Idealistic", "Quixotic", "Impractical", "Utopian"], sentence: "Taking a pragmatic view, the team chose off-the-shelf motors to meet the competition deadline.", mnemonic: "Focused on real-world results rather than abstract theory." },
+            { id: "v-48", word: "Vacillate", pos: "Verb", category: "GIKI Context", urdu: "تذبذب کا شکار ہونا / ڈگمگانا", romanUrdu: "Tazabzub ka shikar hona / Do-dili", synonyms: ["Waver", "Hesitate", "Oscillate", "Dither"], antonyms: ["Decide", "Persevere", "Be resolute", "Stand firm"], sentence: "Do not vacillate between two choices for more than forty seconds on test day.", mnemonic: "Rhymes with OSCILLATE—swinging back and forth between two opinions." }
+        ];
+
+        // ============================================================================
+        // 4. STATE & FILTER CONTROLLERS
+        // ============================================================================
+        let currentModule = 'math';
+        let currentChapter = 'ALL';
+        let currentExamTag = 'ALL';
+        let searchQuery = '';
+        let isFlashMode = false;
+        let vocabViewMode = 'grid';
+
+        const MODULE_META = {
+            math: {
+                heading: "Part I & II Mathematics Reference",
+                subheading: "Algebra, matrices, trigonometry, analytic geometry, conics, calculus, and vectors."
+            },
+            physics: {
+                heading: "Part I & II Physics Reference",
+                subheading: "Mechanics, oscillations, waves, optics, thermodynamics, electromagnetism, and modern physics."
+            },
+            english: {
+                heading: "Admission Test Vocabulary Reference",
+                subheading: "High-frequency words with Urdu script, Roman Urdu, synonyms, antonyms, and memory cues."
+            }
+        };
+
+        function updateTabCounts() {
+            document.getElementById('count-math').textContent = MATH_DATA.length;
+            document.getElementById('count-physics').textContent = PHYSICS_DATA.length;
+            document.getElementById('count-english').textContent = ENGLISH_DATA.length;
+        }
+
+        function getActiveDataset() {
+            if (currentModule === 'math') return MATH_DATA;
+            if (currentModule === 'physics') return PHYSICS_DATA;
+            return ENGLISH_DATA;
+        }
+
+        function switchModule(mod) {
+            currentModule = mod;
+            currentChapter = 'ALL';
+            currentExamTag = 'ALL';
+
+            ['math', 'physics', 'english'].forEach(m => {
+                const btn = document.getElementById(`tab-${m}`);
+                const badge = document.getElementById(`count-${m}`);
+                if (m === mod) {
+                    btn.className = "module-tab bg-[#141413] text-[#faf9f5] flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-semibold text-xs sm:text-sm transition";
+                    if (badge) badge.className = "hidden md:inline-block font-mono px-1.5 py-0.2 text-[11px] rounded bg-stone-800 text-stone-300";
+                } else {
+                    btn.className = "module-tab bg-[#f4f2ec] hover:bg-[#e5e4dc] text-stone-700 border border-[#e5e4dc] flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-semibold text-xs sm:text-sm transition";
+                    if (badge) badge.className = "hidden md:inline-block font-mono px-1.5 py-0.2 text-[11px] rounded bg-stone-200 text-stone-700";
+                }
+            });
+
+            const mathPhysicsLegend = document.getElementById('mathPhysicsLegend');
+            const englishViewToggle = document.getElementById('englishViewToggle');
+
+            if (mod === 'english') {
+                mathPhysicsLegend.classList.add('hidden');
+                englishViewToggle.classList.remove('hidden');
+                englishViewToggle.classList.add('flex');
+            } else {
+                mathPhysicsLegend.classList.remove('hidden');
+                englishViewToggle.classList.add('hidden');
+                englishViewToggle.classList.remove('flex');
+                updateExamTagButtons();
+            }
+
+            document.getElementById('activeModuleHeading').textContent = MODULE_META[mod].heading;
+            document.getElementById('activeModuleSubheading').textContent = MODULE_META[mod].subheading;
+
+            renderChapterPills();
+            renderVaultContent();
+        }
+
+        function renderChapterPills() {
+            const data = getActiveDataset();
+            const chapters = ['ALL', ...new Set(data.map(item => item.chapter || item.category))];
+            const container = document.getElementById('chapterPillsContainer');
+
+            container.innerHTML = chapters.map(ch => {
+                const isActive = currentChapter === ch;
+                const count = ch === 'ALL' ? data.length : data.filter(i => (i.chapter || i.category) === ch).length;
+                const label = ch === 'ALL' ? `All Topics (${count})` : `${ch} (${count})`;
+                return `
+                    <button onclick="selectChapter('${ch.replace(/'/g, "\\'")}')"
+                        class="px-3 py-1 rounded text-xs font-mono whitespace-nowrap transition shrink-0 ${
+                            isActive 
+                            ? 'bg-emerald-800 text-stone-50 font-semibold' 
+                            : 'bg-[#f4f2ec] hover:bg-[#e5e4dc] text-stone-700 border border-[#e5e4dc]'
+                        }">
+                        ${label}
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function selectChapter(ch) {
+            currentChapter = ch;
+            renderChapterPills();
+            renderVaultContent();
+        }
+
+        function setExamTagFilter(tag) {
+            currentExamTag = tag;
+            updateExamTagButtons();
+            renderVaultContent();
+        }
+
+        function updateExamTagButtons() {
+            ['ALL', 'NET', 'GIKI', 'ECAT'].forEach(t => {
+                const btn = document.getElementById(`tag-${t}`);
+                if (!btn) return;
+                if (t === currentExamTag) {
+                    btn.className = "exam-tag-btn px-2.5 py-1 rounded bg-[#141413] text-[#faf9f5] font-mono text-[11px] font-medium whitespace-nowrap transition";
+                } else {
+                    btn.className = "exam-tag-btn px-2.5 py-1 rounded bg-[#f4f2ec] text-stone-700 hover:bg-[#e5e4dc] border border-[#e5e4dc] font-mono text-[11px] font-medium whitespace-nowrap transition";
+                }
+            });
+        }
+
+        function getBadgeStyle(badgeText) {
+            if (badgeText === 'NET') return 'bg-emerald-50 text-emerald-900 border-emerald-300';
+            if (badgeText === 'GIKI') return 'bg-amber-50 text-amber-900 border-amber-300';
+            return 'bg-stone-100 text-stone-800 border-stone-300';
+        }
+
+        function renderVaultContent() {
+            const data = getActiveDataset();
+            const q = searchQuery.trim().toLowerCase();
+
+            const filtered = data.filter(item => {
+                const itemCat = item.chapter || item.category;
+                const matchesChapter = currentChapter === 'ALL' || itemCat === currentChapter;
+                const matchesTag = currentModule === 'english' || currentExamTag === 'ALL' || (item.badge && item.badge.toUpperCase() === currentExamTag);
+                
+                if (!matchesChapter || !matchesTag) return false;
+                if (!q) return true;
+
+                const searchableText = [
+                    item.title, item.chapter, item.badge, item.formula, item.shortcut, item.memorize,
+                    item.word, item.pos, item.category, item.urdu, item.romanUrdu,
+                    ...(item.synonyms || []), ...(item.antonyms || []), item.sentence, item.mnemonic
+                ].filter(Boolean).join(' ').toLowerCase();
+
+                return searchableText.includes(q);
+            });
+
+            document.getElementById('visibleCountBadge').textContent = filtered.length;
+
+            const gridEl = document.getElementById('vaultCardsGrid');
+            const tableEl = document.getElementById('vocabTableContainer');
+            const emptyEl = document.getElementById('emptyStateBox');
+
+            if (filtered.length === 0) {
+                gridEl.classList.add('hidden');
+                tableEl.classList.add('hidden');
+                emptyEl.classList.remove('hidden');
+                return;
+            }
+
+            emptyEl.classList.add('hidden');
+
+            if (currentModule === 'english') {
+                if (vocabViewMode === 'table') {
+                    gridEl.classList.add('hidden');
+                    tableEl.classList.remove('hidden');
+                    renderVocabTable(filtered);
+                } else {
+                    tableEl.classList.add('hidden');
+                    gridEl.classList.remove('hidden');
+                    renderVocabCards(filtered);
+                }
+                return;
+            }
+
+            tableEl.classList.add('hidden');
+            gridEl.classList.remove('hidden');
+
+            gridEl.innerHTML = filtered.map(card => `
+                <article onclick="handleCardClick(this, event)" 
+                    class="flash-card-wrapper bg-white rounded-lg shadow-manual hover:shadow-manual-hover border border-[#e5e4dc] flex flex-col justify-between transition duration-150 overflow-hidden relative">
+                    
+                    <!-- PART 1: HEADER -->
+                    <div class="p-4 sm:p-5 pb-3.5 border-b border-[#e5e4dc]">
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                            <span class="font-mono text-[11px] uppercase tracking-wider px-2 py-0.5 rounded bg-[#f4f2ec] text-stone-700 border border-[#e5e4dc]">
+                                ${card.chapter}
+                            </span>
+                            <div class="flex items-center gap-1.5">
+                                <span class="font-mono px-2 py-0.5 rounded text-[11px] font-semibold border ${getBadgeStyle(card.badge)}">
+                                    ${card.badge}
+                                </span>
+                                <button onclick="copyCardSummary('${card.id}', event)" title="Copy formula and notes"
+                                    class="w-7 h-7 rounded bg-[#f4f2ec] hover:bg-[#e5e4dc] text-stone-600 hover:text-stone-900 flex items-center justify-center text-xs border border-[#e5e4dc] transition">
+                                    <i class="fa-regular fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <h3 class="text-base font-bold text-[#141413] leading-snug">
+                            ${card.title}
+                        </h3>
+                    </div>
+
+                    <!-- Recall Mode Hint -->
+                    <div class="flash-overlay-hint hidden absolute inset-x-0 top-24 z-20 justify-center pointer-events-none">
+                        <span class="px-3 py-1 rounded bg-[#141413] text-[#faf9f5] font-mono text-[11px] uppercase tracking-wider shadow">
+                            Click to reveal
+                        </span>
+                    </div>
+
+                    <!-- PART 2: FORMULA BOX -->
+                    <div class="px-4 sm:px-5 py-3.5 bg-[#f4f2ec] formula-scroll overflow-x-auto flash-blur-target border-b border-[#e5e4dc]">
+                        <div class="font-mono text-[10px] uppercase tracking-widest text-stone-500 mb-1">
+                            FORMULA
+                        </div>
+                        <div class="text-sm sm:text-base py-0.5 text-[#141413]">
+                            ${card.formula}
+                        </div>
+                    </div>
+
+                    <!-- PART 3: SHORTCUT -->
+                    <div class="p-4 sm:p-5 py-3.5 bg-[#faf9f5] border-b border-[#e5e4dc] border-l-4 border-l-[#b45309] flash-blur-target">
+                        <div class="font-mono text-[10px] font-semibold uppercase tracking-widest text-[#b45309] mb-1">
+                            SHORTCUT
+                        </div>
+                        <p class="text-xs sm:text-sm text-stone-800 leading-relaxed">
+                            ${card.shortcut}
+                        </p>
+                    </div>
+
+                    <!-- PART 4: NOTE / TRAP -->
+                    <div class="p-4 sm:p-5 py-3.5 bg-white border-l-4 border-l-[#059669] flash-blur-target flex-1 flex flex-col justify-center">
+                        <div class="font-mono text-[10px] font-semibold uppercase tracking-widest text-[#059669] mb-1">
+                            NOTE / TRAP
+                        </div>
+                        <p class="text-xs sm:text-sm text-stone-700 leading-relaxed">
+                            ${card.memorize}
+                        </p>
+                    </div>
+                </article>
+            `).join('');
+
+            triggerKaTeXRender();
+        }
+
+        function renderVocabCards(words) {
+            const gridEl = document.getElementById('vaultCardsGrid');
+            gridEl.innerHTML = words.map(item => `
+                <article onclick="handleCardClick(this, event)"
+                    class="flash-card-wrapper bg-white rounded-lg shadow-manual hover:shadow-manual-hover border border-[#e5e4dc] flex flex-col justify-between transition duration-150 overflow-hidden relative">
+                    
+                    <!-- PART 1: WORD & URDU -->
+                    <div class="p-4 sm:p-5 pb-3.5 border-b border-[#e5e4dc] flex items-start justify-between gap-4">
+                        <div>
+                            <div class="flex items-center gap-1.5 mb-1.5">
+                                <span class="font-mono px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider bg-[#f4f2ec] text-stone-800 border border-[#e5e4dc]">
+                                    ${item.pos}
+                                </span>
+                                <span class="font-mono px-2 py-0.5 rounded text-[10px] text-stone-600 bg-[#faf9f5] border border-[#e5e4dc]">
+                                    ${item.category}
+                                </span>
+                            </div>
+                            <h3 class="text-xl font-bold text-[#141413] tracking-tight">
+                                ${item.word}
+                            </h3>
+                            <p class="text-xs font-mono text-stone-500 mt-0.5 flash-blur-target">${item.romanUrdu}</p>
+                        </div>
+
+                        <div class="text-right bg-[#f4f2ec] text-[#141413] px-3.5 py-1.5 rounded border border-[#e5e4dc] flash-blur-target shrink-0">
+                            <div class="urdu-text text-base sm:text-lg font-bold">${item.urdu}</div>
+                        </div>
+                    </div>
+
+                    <!-- PART 2: SYNONYMS & ANTONYMS -->
+                    <div class="px-4 sm:px-5 py-3.5 bg-[#faf9f5] border-b border-[#e5e4dc] grid grid-cols-1 sm:grid-cols-2 gap-3 flash-blur-target">
+                        <div>
+                            <span class="block font-mono text-[10px] font-semibold uppercase tracking-widest text-[#059669] mb-1.5">
+                                SYNONYMS
+                            </span>
+                            <div class="flex flex-wrap gap-1">
+                                ${item.synonyms.map(s => `<span class="px-2 py-0.5 rounded text-xs font-medium bg-emerald-50 text-emerald-950 border border-emerald-200">${s}</span>`).join('')}
+                            </div>
+                        </div>
+                        <div>
+                            <span class="block font-mono text-[10px] font-semibold uppercase tracking-widest text-stone-600 mb-1.5">
+                                ANTONYMS
+                            </span>
+                            <div class="flex flex-wrap gap-1">
+                                ${item.antonyms.map(a => `<span class="px-2 py-0.5 rounded text-xs font-medium bg-stone-100 text-stone-800 border border-stone-300">${a}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PART 3: MNEMONIC -->
+                    <div class="px-4 sm:px-5 py-3 bg-[#faf9f5] border-b border-[#e5e4dc] border-l-4 border-l-[#b45309] flash-blur-target">
+                        <span class="block font-mono text-[10px] font-semibold uppercase tracking-widest text-[#b45309] mb-0.5">
+                            MNEMONIC / ASSOCIATION
+                        </span>
+                        <p class="text-xs sm:text-sm text-stone-800">
+                            ${item.mnemonic}
+                        </p>
+                    </div>
+
+                    <!-- PART 4: CONTEXT SENTENCE -->
+                    <div class="px-4 sm:px-5 py-3.5 bg-white border-l-4 border-l-[#059669] flash-blur-target">
+                        <span class="block font-mono text-[10px] font-semibold uppercase tracking-widest text-[#059669] mb-0.5">
+                            USAGE
+                        </span>
+                        <p class="text-xs sm:text-sm text-stone-700 italic leading-relaxed">
+                            "${item.sentence}"
+                        </p>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        function renderVocabTable(words) {
+            const tbody = document.getElementById('vocabTableBody');
+            tbody.innerHTML = words.map(item => `
+                <tr onclick="handleCardClick(this, event)" class="hover:bg-[#faf9f5] transition flash-card-wrapper">
+                    <td class="py-3 px-4 align-top">
+                        <div class="font-bold text-sm text-[#141413]">${item.word}</div>
+                        <span class="inline-block mt-1 font-mono px-1.5 py-0.5 rounded text-[10px] uppercase bg-[#f4f2ec] text-stone-700 border border-[#e5e4dc]">${item.pos}</span>
+                    </td>
+                    <td class="py-3 px-4 align-top text-right flash-blur-target">
+                        <div class="urdu-text text-base font-bold text-[#141413]">${item.urdu}</div>
+                        <div class="text-[11px] font-mono text-stone-500">${item.romanUrdu}</div>
+                    </td>
+                    <td class="py-3 px-4 align-top flash-blur-target">
+                        <div class="flex flex-wrap gap-1 mb-1.5">
+                            <span class="font-mono text-[10px] font-semibold text-[#059669] mr-1">SYN:</span>
+                            ${item.synonyms.map(s => `<span class="px-1.5 py-0.5 rounded text-xs bg-emerald-50 text-emerald-950 border border-emerald-200">${s}</span>`).join('')}
+                        </div>
+                        <div class="flex flex-wrap gap-1">
+                            <span class="font-mono text-[10px] font-semibold text-stone-500 mr-1">ANT:</span>
+                            ${item.antonyms.map(a => `<span class="px-1.5 py-0.5 rounded text-xs bg-stone-100 text-stone-800 border border-stone-300">${a}</span>`).join('')}
+                        </div>
+                    </td>
+                    <td class="py-3 px-4 align-top flash-blur-target max-w-md">
+                        <div class="text-xs text-stone-800 bg-[#f4f2ec] px-2.5 py-1 rounded border border-[#e5e4dc] mb-1">
+                            <strong class="font-mono text-[10px] uppercase text-[#b45309]">Mnemonic:</strong> ${item.mnemonic}
+                        </div>
+                        <div class="text-xs text-stone-600 italic">"${item.sentence}"</div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function setVocabView(mode) {
+            vocabViewMode = mode;
+            const gridBtn = document.getElementById('vocabGridBtn');
+            const tableBtn = document.getElementById('vocabTableBtn');
+            if (mode === 'grid') {
+                gridBtn.className = "px-2.5 py-1 rounded-md text-xs font-mono font-medium bg-[#141413] text-[#faf9f5] transition";
+                tableBtn.className = "px-2.5 py-1 rounded-md text-xs font-mono font-medium text-stone-600 hover:text-stone-900 transition";
+            } else {
+                tableBtn.className = "px-2.5 py-1 rounded-md text-xs font-mono font-medium bg-[#141413] text-[#faf9f5] transition";
+                gridBtn.className = "px-2.5 py-1 rounded-md text-xs font-mono font-medium text-stone-600 hover:text-stone-900 transition";
+            }
+            renderVaultContent();
+        }
+
+        // ============================================================================
+        // 5. SEARCH, RECALL MODE & CLIPBOARD
+        // ============================================================================
+        function handleSearch(val) {
+            searchQuery = val;
+            const clearBtn = document.getElementById('clearSearchBtn');
+            if (val.trim().length > 0) {
+                clearBtn.classList.remove('hidden');
+            } else {
+                clearBtn.classList.add('hidden');
+            }
+            renderVaultContent();
+        }
+
+        function clearSearch() {
+            const input = document.getElementById('globalSearchInput');
+            input.value = '';
+            handleSearch('');
+            input.focus();
+        }
+
+        function resetAllFilters() {
+            currentChapter = 'ALL';
+            currentExamTag = 'ALL';
+            clearSearch();
+            updateExamTagButtons();
+            renderChapterPills();
+            renderVaultContent();
+        }
+
+        function toggleFlashMode() {
+            isFlashMode = !isFlashMode;
+            document.body.classList.toggle('flash-mode-active', isFlashMode);
+
+            const dot = document.getElementById('flashStatusDot');
+            const text = document.getElementById('flashModeText');
+            const banner = document.getElementById('flashBanner');
+
+            if (isFlashMode) {
+                dot.className = "w-2 h-2 rounded-full bg-emerald-500";
+                text.textContent = "Recall Blur: On";
+                banner.classList.remove('hidden');
+            } else {
+                dot.className = "w-2 h-2 rounded-full bg-stone-500";
+                text.textContent = "Recall Blur: Off";
+                banner.classList.add('hidden');
+                document.querySelectorAll('.revealed').forEach(el => el.classList.remove('revealed'));
+                document.querySelectorAll('.revealed-card').forEach(el => el.classList.remove('revealed-card'));
+            }
+        }
+
+        function handleCardClick(cardEl, event) {
+            if (!isFlashMode) return;
+            cardEl.classList.toggle('revealed-card');
+            cardEl.querySelectorAll('.flash-blur-target').forEach(target => {
+                target.classList.toggle('revealed');
+            });
+        }
+
+        function revealAllCards() {
+            document.querySelectorAll('.flash-card-wrapper').forEach(card => card.classList.add('revealed-card'));
+            document.querySelectorAll('.flash-blur-target').forEach(el => el.classList.add('revealed'));
+        }
+
+        function copyCardSummary(cardId, event) {
+            event.stopPropagation();
+            const allCards = [...MATH_DATA, ...PHYSICS_DATA];
+            const card = allCards.find(c => c.id === cardId);
+            if (!card) return;
+
+            const cleanShortcut = card.shortcut.replace(/<[^>]*>?/gm, '');
+            const textToCopy = `[${card.chapter} — ${card.title}]\nFormula: ${card.formula.replace(/\s+/g, ' ')}\nShortcut: ${cleanShortcut}`;
+
+            const tempInput = document.createElement('textarea');
+            tempInput.value = textToCopy;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            showToast(`Copied "${card.title}"`);
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('copyToast');
+            document.getElementById('copyToastMsg').textContent = msg;
+            toast.classList.remove('hidden');
+            toast.classList.add('flex');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+                toast.classList.remove('flex');
+            }, 2200);
+        }
+
+        function triggerKaTeXRender() {
+            if (typeof renderMathInElement === 'function') {
+                renderMathInElement(document.getElementById('vaultCardsGrid'), {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+                e.preventDefault();
+                document.getElementById('globalSearchInput').focus();
+            }
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            updateTabCounts();
+            renderChapterPills();
+            renderVaultContent();
+            setTimeout(triggerKaTeXRender, 300);
+        });
+    </script>
+</body>
+</html>
